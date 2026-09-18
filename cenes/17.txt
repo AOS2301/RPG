@@ -1,0 +1,15 @@
+# Batalha contra o Rei da Ruína
+N: Vaelthar, o Rei da Ruína
+H: 25
+S: 4
+E: 3
+T: 50
+P: 5
+
+As muralhas do Farol de Âmbar tremem enquanto Vaelthar canaliza a energia corrompida da Chama Primordial. Seus olhos brilham com uma fúria gélida.
+"Você ousa desafiar o verdadeiro mestre de Valdora?", ele ruge, brandindo sua lâmina sombria.
+
+A batalha é implacável. Cada golpe ecoa como o trovão nas pedras ancestrais.
+
+#18: Se vencer o combate
+#19: Se for derrotado

@@ -1,0 +1,16 @@
+m
+As minas estão abandonadas. Ferramentas permanecem espalhadas pelo chão e mensagens desesperadas foram riscadas nas paredes.
+
+"Ele fala através da luz."
+"Os guardiões que desceram não voltaram iguais."
+
+Morcegos espectrais descem do teto. Seus corpos foram alterados pela energia sombria que Vaelthar extrai da Chama Primordial.
+
+N: Morcegos espectrais
+M: S
+H: 11
+S: 12
+E: 10
+T: 120
+P: 2
+8;14

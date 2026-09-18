@@ -1,0 +1,13 @@
+#1
+O cemitério atrás da capela guarda os túmulos dos antigos membros da Ordem. Uma tumba sem nome traz o mesmo símbolo do seu medalhão.
+
+Dentro dela, você encontra uma armadura leve e um diário protegido por tecido encerado. A última anotação de seu pai foi escrita há pouco mais de três anos:
+
+"Vaelthar encontrou uma maneira de usar a Chama Primordial sem obedecer aos seus princípios. Se eu falhar, ele tentará transformar os guardiões em instrumentos do próprio poder."
+
+Uma segunda frase foi escrita com tinta escura:
+
+"Ele não me matou. Ele me levou."
+
+I: Armadura dos Guardiões;r;1;1;2
+#6: Seguir para a entrada das minas

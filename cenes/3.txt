@@ -1,0 +1,11 @@
+#1
+A ponte de pedra range sob seus pés. No meio da travessia, você encontra uma caravana destruída e um sobrevivente escondido sob uma carroça.
+
+Ele segura um símbolo quebrado da Ordem dos Guardiões.
+
+"Não vá para a fortaleza", ele sussurra. "Os soldados de Vaelthar estão procurando o medalhão. Eles dizem que o sangue dos guardiões deve ser apagado."
+
+Um som metálico ecoa entre a fumaça. A entrada da Fortaleza de Auren aparece adiante, mas uma passagem lateral leva até o antigo cemitério.
+
+#5: Entrar na fortaleza pela passagem principal
+#4: Seguir pela passagem lateral até o cemitério

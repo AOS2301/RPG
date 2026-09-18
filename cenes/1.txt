@@ -1,0 +1,22 @@
+#1
+O vento frio atravessa as árvores mortas enquanto você caminha pela antiga Estrada dos Guardiões. À sua frente, além da névoa, erguem-se as ruínas de Valdora.
+
+Há três noites, o Farol de Âmbar se apagou. Desde então, animais fogem das florestas, viajantes desaparecem e criaturas deformadas são vistas nas estradas.
+
+Seu pai desapareceu há pouco mais de três anos, durante uma investigação nas ruínas da Fortaleza de Auren. Ele era membro da Ordem dos Guardiões, uma organização dedicada a proteger os selos que mantinham as criaturas do norte afastadas.
+
+Todos disseram que ele estava morto.
+
+Na noite anterior à sua partida, porém, uma mensageira ferida chegou à sua vila carregando o medalhão de ferro de seu pai.
+
+Antes de perder a consciência, ela sussurrou:
+
+"A chama ainda existe... mas ele também voltou."
+
+O medalhão possui uma pequena pedra dourada que pulsa quando você se aproxima da fortaleza.
+
+A estrada se divide.
+
+I: Medalhão dos Guardiões;c;0;0;0
+#2: Investigar a Capela de Santa Elara
+#3: Atravessar a ponte em ruínas em direção à fortaleza

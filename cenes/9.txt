@@ -1,0 +1,21 @@
+m
+No caminho para o topo da fortaleza, você encontra uma sala circular destruída. No centro está seu pai.
+
+Por pouco mais de três anos, você imaginou encontrar um cadáver. Agora ele está diante de você, vivo, mas irreconhecível. Veios escuros percorrem seu rosto e uma corrente de sombra envolve seu braço.
+
+Ele ergue os olhos.
+
+"Você... não deveria ter vindo."
+
+Por um instante, sua voz é a mesma que você recorda da infância. Então o feitiço de Vaelthar assume o controle.
+
+"Meu filho não existe mais. Só existe o dever."
+
+Seu pai ataca, lutando contra você e contra a magia que o domina.
+
+N: Auren, o Guardião Corrompido
+M: S
+H: 13
+S: 12
+E: 18
+10;15

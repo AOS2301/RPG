@@ -1,0 +1,12 @@
+#1
+A Capela de Santa Elara foi um dos últimos refúgios da Ordem dos Guardiões. Entre bancos quebrados e livros queimados, você encontra uma página escrita pela mão de seu pai.
+
+"Se eu desaparecer, não confie no Conselho. O rei não foi derrotado; apenas aprendeu a esperar. Vaelthar odeia tudo o que a Ordem representa. Para ele, proteger é uma forma de limitar o poder."
+
+Atrás do altar, você encontra uma adaga de prata que pertenceu ao seu pai. Na lâmina está gravado o símbolo de Auren.
+
+Um ruído surge do lado de fora. Alguém parece estar seguindo seus passos.
+
+I: Adaga de prata;w;1;1;1
+#4: Investigar o cemitério atrás da capela
+#6: Seguir as anotações até a entrada das minas

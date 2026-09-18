@@ -1,0 +1,22 @@
+m
+O portão principal é protegido por um Sentinela de Ferro, construído pela própria Ordem dos Guardiões. Símbolos de contenção foram cobertos por marcas negras.
+
+Ao reconhecer o medalhão, a máquina hesita.
+
+"Identificação confirmada. Sangue de guardião detectado."
+"Protocolo de contenção ativado. A linhagem de Auren não deve alcançar a chama."
+
+A voz metálica muda por um instante.
+
+"Ordem original corrompida. Comando atual: Vaelthar."
+
+O sentinela ergue sua lâmina e avança.
+
+N: Sentinela de Ferro
+M: S
+H: 9
+S: 8
+E: 14
+T: 80
+P: 1
+12;13
