@@ -26,6 +26,6 @@ int main() {
     std::cin >> endereco;
 
     std::cout << "As infos foram " << p.area(base, altura);
-
+    // teste!
     return 0;                                                                
 }                                                                   
