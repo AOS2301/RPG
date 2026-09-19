@@ -2,31 +2,34 @@
 #define ARMA_H
 #include <iostream>
 #include <string>
+
+using namespace std;
+
 class Arma
 {
 public:
-     // Construtor padrão
-    Arma();
+    Arma(string nome, bool combate, int fa, int dano);
 
-    Arma(std::string nome, int dano) : nome(nome), dano(dano) {}
-    virtual ~Arma() = default;
-
-    virtual int calcularDano() const = 0; // cada arma calcula o dano do seu jeito
-
-    // Métodos
-    std::string imprimeInfo();
+    // Metodos
+    string imprimeInfo();
 
     // Getters
     string getNome();
+    bool getCombate();
+    int getFA();
     int getDano();
 
     // Setters
-    void setNome(std::string nome);
+    void setNome(string nome);
+    void setCombate(bool combate);
+    void setFA(int fa);
     void setDano(int dano);
 
 protected:
     string nome;
-    int dano;
+    bool combate; // se pode ser usada em combate (campo "combate" do formato de item)
+    int fa;       // bonus de Forca de Ataque (campo "FA")
+    int dano;     // bonus de dano (campo "dano")
 };
 
 #endif // ARMA_H

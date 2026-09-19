@@ -1,0 +1,1 @@
+//Invenário do jogador, contendo todos os artefatos, armas, e demais colecionaveis encontrados

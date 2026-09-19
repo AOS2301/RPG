@@ -1,4 +1,4 @@
-#include "../include/personagens/Personagem.h"
+#include "../../include/personagens/Personagem.h"
 #include <iostream>
 #include <cstdlib> // rand()
 
@@ -33,14 +33,14 @@ string Personagem::getNome(){
     return nome; 
 }
 
-int Personagem::getHabilidade() const { 
+int Personagem::getHabilidade(){ 
     return habilidade; 
 }
 
-int Personagem::getEnergia() const {
+int Personagem::getEnergia(){
     return energia; 
 }
 
-int Personagem::getSorte() const { 
+int Personagem::getSorte(){ 
     return sorte; 
 }

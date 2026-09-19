@@ -3,37 +3,38 @@
 #include <iostream>
 #include <string>
 
+using namespace std;
 class Personagem
 {
 public:
-     // Construtor padrão
-    Personagem();
+    Personagem(string nome, int habilidade, int energia, int sorte);
 
-    Personagem(std::string nome, int vida, int forca, int sorte)
-        : nome(nome), vida(vida), forca(forca), sorte(sorte) {}
-
-    virtual ~Personagem() = default;
+    virtual ~Personagem();
 
     // Métodos
-    virtual void atacar(Personagem& alvo) = 0;
+    virtual void atacar(Personagem* alvo) = 0;
 
     // Getters
     string getNome();
-    int getVida();
-    float getForca();
+    int getHabilidade();
+    int getEnergia();
     int getSorte();
 
     // Setters
     void setNome(string nome);
-    void setVida(int vida);
-    void setForca(float forca);
+    void setHabilidade(int habilidade);
+    void setEnergia(int energia);
     void setSorte(int sorte);
+
+    void receberDano(int dano);
+    bool estaVivo();
+    bool testarSorte();
 
 protected:
     string nome;
-    int vida;
-    int forca;
-    int sorte;
+    int habilidade; //Representa a destreza em combate. O valor influência diretamente nos resultados dos combates. 
+    int energia; //Representa sua constituição, ou seja, pontos de vida.
+    int sorte; // Como descrito sua sorte pode ser testada em determinados eventos e também pode mudar valores do dano recebido ou causado.
 };
 
 #endif // PERSONAGEM_H
