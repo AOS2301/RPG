@@ -3,8 +3,8 @@
 ==================================================
 
   Programadores:
-    - Nome do programador 1
-    - Nome do programador 2
+    - Arthur Osvaldo Schmitz  
+    - Luiz Augusto Rodrigues
 
   Trabalho Pratico Grau A
   Programacao Orientada a Objetos - UNISINOS
