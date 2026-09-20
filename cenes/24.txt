@@ -1,0 +1,15 @@
+m
+Uma escada estreita desce da Câmara da Primeira Chama até a cripta dos guardiões. Fileiras de nichos guardam armaduras vazias, e uma delas ainda se move.
+
+Um guardião esquecido, preso entre a morte e o dever, ergue a espada ao perceber o medalhão em seu peito.
+
+"Somente os dignos... podem subir."
+
+N: Guardião esquecido
+M: S
+H: 9
+S: 7
+E: 12
+T: 40
+P: 1
+25;8

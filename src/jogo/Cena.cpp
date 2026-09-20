@@ -1,0 +1,122 @@
+#include "../../include/jogo/Cena.h"
+#include <fstream>
+#include <cctype>
+
+// ---- funcoes auxiliares (so existem dentro deste arquivo) ----
+// Remove espacos e o '\r' que arquivos criados no Windows deixam no fim da linha.
+static string aparar(string s) {
+    while (!s.empty() && (s[s.size() - 1] == '\r' || s[s.size() - 1] == ' ')) {
+        s.erase(s.size() - 1);
+    }
+    while (!s.empty() && s[0] == ' ') {
+        s.erase(0, 1);
+    }
+    return s;
+}
+
+// ---- Cena ----
+Cena::Cena() {
+    limpar();
+}
+
+void Cena::limpar() {
+    monstro = false;
+    texto = "";
+    textosOpcoes.clear();
+    destinosOpcoes.clear();
+    itens.clear();
+    nomeMonstro = "";
+    habilidadeMonstro = 0;
+    sorteMonstro = 0;
+    energiaMonstro = 0;
+    ouro = 0;
+    provisoes = 0;
+    destinoSucesso = 0;
+    destinoDerrota = 0;
+}
+
+bool Cena::carregar(string caminho) {
+    limpar();
+
+    ifstream arquivo;
+    arquivo.open(caminho);
+
+    if (arquivo.fail()) {
+        return false;
+    }
+
+    string linha;
+
+    // 1a linha: "#N" (cena de narrativa) ou "m" (cena de monstro).
+    getline(arquivo, linha);
+    linha = aparar(linha);
+    monstro = (!linha.empty() && linha[0] == 'm');
+
+    // Demais linhas: cada uma eh texto, opcao, item ou dado do monstro.
+    while (getline(arquivo, linha)) {
+        linha = aparar(linha);
+
+        if (linha.substr(0, 2) == "I:") {
+            itens.push_back(aparar(linha.substr(2)));
+        }
+        else if (!linha.empty() && linha[0] == '#') {
+            // "#2: Investigar a capela" -> destino 2, texto "Investigar a capela"
+            size_t doisPontos = linha.find(':');
+            destinosOpcoes.push_back(stoi(linha.substr(1, doisPontos - 1)));
+            textosOpcoes.push_back(aparar(linha.substr(doisPontos + 1)));
+        }
+        else if (monstro && linha.substr(0, 2) == "N:") {
+            nomeMonstro = aparar(linha.substr(2));
+        }
+        else if (monstro && linha.substr(0, 2) == "H:") {
+            habilidadeMonstro = stoi(linha.substr(2));
+        }
+        else if (monstro && linha.substr(0, 2) == "S:") {
+            sorteMonstro = stoi(linha.substr(2));
+        }
+        else if (monstro && linha.substr(0, 2) == "E:") {
+            energiaMonstro = stoi(linha.substr(2));
+        }
+        else if (monstro && linha.substr(0, 2) == "T:") {
+            ouro = stoi(linha.substr(2));
+        }
+        else if (monstro && linha.substr(0, 2) == "P:") {
+            provisoes = stoi(linha.substr(2));
+        }
+        else if (monstro && linha.substr(0, 2) == "M:") {
+            // Campo "M" aparece nos arquivos, mas nao eh descrito no enunciado. Ignorado por enquanto.
+        }
+        else if (monstro && !linha.empty() && isdigit(linha[0])) {
+            // "12;13" -> cena se vencer ; cena se perder
+            size_t pontoEVirgula = linha.find(';');
+            destinoSucesso = stoi(linha.substr(0, pontoEVirgula));
+            destinoDerrota = stoi(linha.substr(pontoEVirgula + 1));
+        }
+        else {
+            // Qualquer outra linha faz parte do texto da narrativa.
+            texto += linha + "\n";
+        }
+    }
+
+    arquivo.close();
+    return true;
+}
+
+bool Cena::ehMonstro() { return monstro; }
+string Cena::getTexto() { return texto; }
+
+int Cena::getQuantidadeOpcoes() { return static_cast<int>(textosOpcoes.size()); }
+string Cena::getTextoOpcao(int indice) { return textosOpcoes.at(indice); }
+int Cena::getDestinoOpcao(int indice) { return destinosOpcoes.at(indice); }
+
+int Cena::getQuantidadeItens() { return static_cast<int>(itens.size()); }
+string Cena::getItem(int indice) { return itens.at(indice); }
+
+string Cena::getNomeMonstro() { return nomeMonstro; }
+int Cena::getHabilidadeMonstro() { return habilidadeMonstro; }
+int Cena::getSorteMonstro() { return sorteMonstro; }
+int Cena::getEnergiaMonstro() { return energiaMonstro; }
+int Cena::getOuro() { return ouro; }
+int Cena::getProvisoes() { return provisoes; }
+int Cena::getDestinoSucesso() { return destinoSucesso; }
+int Cena::getDestinoDerrota() { return destinoDerrota; }

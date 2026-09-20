@@ -12,3 +12,4 @@ Sobre a mesa, há uma poção e uma chave marcada com o símbolo dos mineradores
 I: Poção de vigor;c;1;0;3
 I: Chave dos mineradores;c;0;0;0
 #7: Entrar nas minas subterrâneas
+#20: Explorar os alojamentos abandonados dos mineiros

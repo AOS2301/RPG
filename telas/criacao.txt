@@ -1,0 +1,18 @@
+==================================================
+              CRIACAO DO PERSONAGEM
+==================================================
+
+Todo personagem comeca com valores minimos:
+
+  HABILIDADE = 6   (destreza em combate, maximo 12)
+  ENERGIA    = 12  (pontos de vida,      maximo 24)
+  SORTE      = 6   (testes e golpes,     maximo 12)
+
+Voce tem 12 PONTOS EXTRAS para distribuir entre os
+tres atributos. Devem ser usados todos os 12.
+
+  Extras em HABILIDADE: de 0 a 6
+  Extras em ENERGIA:    de 0 a 12
+  Extras em SORTE:      de 0 a 6
+
+--------------------------------------------------

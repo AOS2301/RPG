@@ -1,0 +1,13 @@
+m
+O túnel de ventilação é estreito e úmido. Teias grossas cobrem as paredes e, ao fundo, a lanterna revela uma aranha de minério, com patas de pedra cinzenta e olhos que refletem o dourado da chama corrompida.
+
+Ela desce do teto sem emitir um único som.
+
+N: Aranha de minério
+M: S
+H: 7
+S: 6
+E: 8
+T: 20
+P: 1
+23;21

@@ -1,0 +1,12 @@
+==================================================
+                    CREDITOS
+==================================================
+
+  Programadores:
+    - Nome do programador 1
+    - Nome do programador 2
+
+  Trabalho Pratico Grau A
+  Programacao Orientada a Objetos - UNISINOS
+
+--------------------------------------------------

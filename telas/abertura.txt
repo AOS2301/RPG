@@ -1,0 +1,21 @@
+==================================================
+            O REI GUARDIAO - Valdora
+==================================================
+
+O Farol de Ambar se apagou ha tres noites. Animais
+fogem das florestas, viajantes desaparecem e
+criaturas deformadas surgem nas estradas.
+
+Seu pai, um Guardiao da Ordem, sumiu ha tres anos
+nas ruinas da Fortaleza de Auren. Todos dizem que
+esta morto... mas o medalhao dele acaba de chegar
+as suas maos.
+
+Voce decide seguir o rastro dele ate as ruinas.
+
+--------------------------------------------------
+  1 - Novo jogo
+  2 - Carregar jogo
+  3 - Creditos
+  4 - Sair
+--------------------------------------------------

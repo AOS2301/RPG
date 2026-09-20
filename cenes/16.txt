@@ -10,3 +10,4 @@ Um mapa indica uma rota até a Câmara da Primeira Chama. Ao longe, uma luz dour
 Você aperta o medalhão e segue adiante, decidido a descobrir toda a verdade sobre Vaelthar e o destino de seu pai.
 
 #7: Retornar às minas e alcançar a Câmara da Primeira Chama
+#6: Voltar à sala de manutenção e procurar outra rota
