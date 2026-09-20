@@ -3,23 +3,28 @@
 #include <cstdlib> // rand()
 
 Jogador::Jogador(string nome, int habilidade, int energia, int sorte)
-    : Personagem(nome, habilidade, energia, sorte), armaEquipada(nullptr),
-      nivel(1), experiencia(0), pontosEvolucao(0), ouro(0), provisoes(0) {}
+    : Personagem(nome, habilidade, energia, sorte),
+      nivel(1), experiencia(0), pontosEvolucao(0) {}
 
 Jogador::~Jogador() {
-    delete armaEquipada;
+    // O Inventario eh membro por valor: seu proprio destrutor ja libera
+    // as armas guardadas (ver Inventario::~Inventario).
+}
+
+Inventario& Jogador::getInventario() {
+    return inventario;
 }
 
 void Jogador::equiparArma(Arma* arma) {
-    delete armaEquipada;
-    armaEquipada = arma;
+    inventario.equiparArma(arma);
 }
 
 Arma* Jogador::getArmaEquipada() {
-    return armaEquipada;
+    return inventario.getArmaEquipada();
 }
 
 void Jogador::atacar(Personagem* alvo) {
+    Arma* armaEquipada = inventario.getArmaEquipada();
     int bonusFA = (armaEquipada != nullptr) ? armaEquipada->getFA() : 0;
     int bonusDano = (armaEquipada != nullptr) ? armaEquipada->getDano() : 0;
 
@@ -100,34 +105,31 @@ bool Jogador::evoluirAtributo(char atributo) {
     return true;
 }
 
+// Setters usados so para restaurar um jogo salvo (carregarJogo).
+void Jogador::setNivel(int nivel) { this->nivel = nivel; }
+void Jogador::setExperiencia(int experiencia) { this->experiencia = experiencia; }
+void Jogador::setPontosEvolucao(int pontosEvolucao) { this->pontosEvolucao = pontosEvolucao; }
+
 // ------------------------------------------------------------------
-// Recursos
+// Recursos (atalhos para o Inventario, que eh quem guarda os valores)
 // ------------------------------------------------------------------
 
-void Jogador::adicionarOuro(int quantidade) {
-    if (quantidade > 0) {
-        ouro += quantidade;
-    }
-}
+void Jogador::adicionarOuro(int quantidade) { inventario.adicionarOuro(quantidade); }
+int Jogador::getOuro() { return inventario.getOuro(); }
 
-int Jogador::getOuro() { return ouro; }
-
-void Jogador::adicionarProvisoes(int quantidade) {
-    if (quantidade > 0) {
-        provisoes += quantidade;
-    }
-}
-
-int Jogador::getProvisoes() { return provisoes; }
+void Jogador::adicionarProvisoes(int quantidade) { inventario.adicionarProvisoes(quantidade); }
+int Jogador::getProvisoes() { return inventario.getProvisoes(); }
 
 // Uma provisao recupera sempre 4 pontos de energia (enunciado).
 // Retorna false se nao ha provisao ou se a energia ja esta cheia.
 bool Jogador::usarProvisao() {
-    if (provisoes <= 0 || energia >= energiaMaxima) {
+    if (energia >= energiaMaxima) {
+        return false;
+    }
+    if (!inventario.consumirProvisao()) {
         return false;
     }
 
-    provisoes--;
     recuperarEnergia(4);
     return true;
 }

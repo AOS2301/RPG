@@ -127,8 +127,11 @@ void Jogo::criarPersonagem() {
     mostrarFicha();
 }
 
-// Ficha do personagem (tela de inventario, versao inicial).
+// Ficha do personagem (tela de inventario): atributos, arma equipada e
+// os demais itens guardados no Inventario.
 void Jogo::mostrarFicha() {
+    Inventario& inv = jogador->getInventario();
+
     cout << "------------ " << jogador->getNome() << " ------------" << endl;
     cout << "Nivel:      " << jogador->getNivel()
          << "  (experiencia " << jogador->getExperiencia() << "/"
@@ -139,11 +142,31 @@ void Jogo::mostrarFicha() {
     cout << "Provisoes:  " << jogador->getProvisoes() << endl;
     cout << "Ouro:       " << jogador->getOuro() << endl;
 
-    Arma* arma = jogador->getArmaEquipada();
+    Arma* arma = inv.getArmaEquipada();
     if (arma != nullptr) {
         cout << "Arma:       " << arma->imprimeInfo() << endl;
     } else {
         cout << "Arma:       nenhuma" << endl;
+    }
+
+    // Outras armas guardadas, mas nao equipadas.
+    bool temOutrasArmas = false;
+    for (int i = 0; i < inv.getQuantidadeArmas(); i++) {
+        if (inv.getArma(i) != arma) {
+            if (!temOutrasArmas) {
+                cout << "Mochila:" << endl;
+                temOutrasArmas = true;
+            }
+            cout << "  - " << inv.getArma(i)->imprimeInfo() << endl;
+        }
+    }
+
+    // Armaduras e itens comuns.
+    if (inv.getQuantidadeOutrosItens() > 0) {
+        cout << "Itens:" << endl;
+        for (int i = 0; i < inv.getQuantidadeOutrosItens(); i++) {
+            cout << "  - " << inv.getOutroItem(i) << endl;
+        }
     }
 
     if (jogador->getPontosEvolucao() > 0) {
@@ -247,7 +270,17 @@ void Jogo::iniciar() {
             jogar();
         }
         else if (opcao == 2) {
-            cout << "Carregar jogo: ainda nao implementado." << endl << endl;
+            cout << "Nome do personagem salvo: ";
+            string nomeSalvo;
+            getline(cin, nomeSalvo);
+
+            if (carregarJogo(nomeSalvo)) {
+                cout << endl << "Jogo carregado com sucesso!" << endl << endl;
+                mostrarFicha();
+                jogar(false); // continua da cena salva, sem reiniciar o progresso
+            } else {
+                cout << endl << "Nao ha nenhum jogo salvo com esse nome." << endl << endl;
+            }
         }
         else if (opcao == 3) {
             mostrarCreditos();
@@ -286,13 +319,187 @@ bool Jogo::jaDerrotou(int numeroCena) {
 }
 
 // ------------------------------------------------------------------
+// Salvar/Carregar: um arquivo de texto por personagem, data/<nome>.txt
+// (mesma ideia dos arquivos de cena: um dado por linha). Formato:
+//
+//   nome
+//   habilidade
+//   energia
+//   energiaMaxima
+//   sorte
+//   nivel
+//   experiencia
+//   pontosEvolucao
+//   cenaAtual
+//   quantidade de cenas visitadas
+//   cenas visitadas separadas por ';' (linha vazia se nao houver nenhuma)
+//   quantidade de monstros derrotados
+//   monstros derrotados separados por ';' (linha vazia se nao houver nenhum)
+//   -- a partir daqui, quem escreve/le eh o Inventario (Inventario::salvar/carregar) --
+//   ouro
+//   provisoes
+//   quantidade de armas
+//   uma linha por arma -> nome;combate;fa;dano
+//   indice da arma equipada (-1 se nenhuma)
+//   quantidade de outros itens
+//   uma linha por item
+// ------------------------------------------------------------------
+
+// Junta um vector<int> numa linha "1;2;3" (usada so para salvar).
+static string juntar(const vector<int>& valores) {
+    string linha = "";
+    for (size_t i = 0; i < valores.size(); i++) {
+        if (i > 0) {
+            linha += ";";
+        }
+        linha += to_string(valores[i]);
+    }
+    return linha;
+}
+
+string Jogo::caminhoSave(string nome) {
+    return "data/" + nome + ".txt";
+}
+
+void Jogo::salvarJogo() {
+    if (jogador == nullptr) {
+        return; // nao ha partida em andamento para salvar
+    }
+
+    ofstream arquivo(caminhoSave(jogador->getNome()));
+    if (arquivo.fail()) {
+        cout << "Aviso: nao foi possivel salvar o jogo." << endl;
+        return;
+    }
+
+    arquivo << jogador->getNome() << "\n";
+    arquivo << jogador->getHabilidade() << "\n";
+    arquivo << jogador->getEnergia() << "\n";
+    arquivo << jogador->getEnergiaMaxima() << "\n";
+    arquivo << jogador->getSorte() << "\n";
+    arquivo << jogador->getNivel() << "\n";
+    arquivo << jogador->getExperiencia() << "\n";
+    arquivo << jogador->getPontosEvolucao() << "\n";
+
+    arquivo << cenaAtual << "\n";
+
+    arquivo << cenasVisitadas.size() << "\n";
+    arquivo << juntar(cenasVisitadas) << "\n";
+
+    arquivo << monstrosDerrotados.size() << "\n";
+    arquivo << juntar(monstrosDerrotados) << "\n";
+
+    // Ouro, provisoes, armas e itens: quem sabe salvar isso eh o Inventario.
+    jogador->getInventario().salvar(arquivo);
+
+    arquivo.close();
+}
+
+// Le uma linha do arquivo de save e converte para inteiro.
+// "ok" vira false se a linha nao existir ou nao for um numero valido.
+static int lerLinhaInteira(ifstream& arquivo, bool& ok) {
+    string linha;
+    if (!ok || !getline(arquivo, linha)) {
+        ok = false;
+        return 0;
+    }
+    try {
+        return stoi(linha);
+    } catch (...) {
+        ok = false; // linha nao era um numero (arquivo corrompido)
+        return 0;
+    }
+}
+
+// Restaura a partida salva em data/<nome>.txt. Retorna false se nao existe
+// save com esse nome ou se o arquivo estiver corrompido/incompleto.
+bool Jogo::carregarJogo(string nome) {
+    ifstream arquivo(caminhoSave(nome));
+    if (arquivo.fail()) {
+        return false; // nenhum jogo salvo com esse nome
+    }
+
+    string nomeSalvo;
+    if (!getline(arquivo, nomeSalvo)) {
+        return false;
+    }
+
+    bool ok = true;
+    int habilidade      = lerLinhaInteira(arquivo, ok);
+    int energia         = lerLinhaInteira(arquivo, ok);
+    int energiaMaxima   = lerLinhaInteira(arquivo, ok);
+    int sorte           = lerLinhaInteira(arquivo, ok);
+    int nivel           = lerLinhaInteira(arquivo, ok);
+    int experiencia     = lerLinhaInteira(arquivo, ok);
+    int pontosEvolucao  = lerLinhaInteira(arquivo, ok);
+
+    int cena = lerLinhaInteira(arquivo, ok);
+    int quantidadeVisitadas = lerLinhaInteira(arquivo, ok);
+
+    string linhaVisitadas;
+    if (!getline(arquivo, linhaVisitadas)) {
+        ok = false;
+    }
+
+    int quantidadeDerrotados = lerLinhaInteira(arquivo, ok);
+
+    string linhaDerrotados;
+    if (!getline(arquivo, linhaDerrotados)) {
+        ok = false;
+    }
+
+    if (!ok) {
+        return false; // arquivo de save incompleto ou corrompido
+    }
+
+    // So depois de ler os dados do personagem eh que descartamos o jogador atual.
+    delete jogador;
+    jogador = new Jogador(nomeSalvo, habilidade, energiaMaxima, sorte);
+    jogador->setEnergia(energia);
+    jogador->setNivel(nivel);
+    jogador->setExperiencia(experiencia);
+    jogador->setPontosEvolucao(pontosEvolucao);
+
+    // Ouro, provisoes, armas e itens: quem sabe se carregar isso eh o Inventario.
+    if (!jogador->getInventario().carregar(arquivo)) {
+        delete jogador;
+        jogador = nullptr;
+        return false; // dados do inventario corrompidos: descarta tudo
+    }
+
+    arquivo.close();
+
+    cenaAtual = cena;
+
+    cenasVisitadas.clear();
+    if (quantidadeVisitadas > 0 && !linhaVisitadas.empty()) {
+        vector<string> partes = dividir(linhaVisitadas, ';');
+        for (size_t i = 0; i < partes.size(); i++) {
+            cenasVisitadas.push_back(stoi(partes[i]));
+        }
+    }
+
+    monstrosDerrotados.clear();
+    if (quantidadeDerrotados > 0 && !linhaDerrotados.empty()) {
+        vector<string> partes = dividir(linhaDerrotados, ';');
+        for (size_t i = 0; i < partes.size(); i++) {
+            monstrosDerrotados.push_back(stoi(partes[i]));
+        }
+    }
+
+    return true;
+}
+
+// ------------------------------------------------------------------
 // Loop da aventura: carrega a cena atual, executa e descobre a proxima.
 // ------------------------------------------------------------------
 
-void Jogo::jogar() {
-    cenaAtual = 1;
-    cenasVisitadas.clear();
-    monstrosDerrotados.clear();
+void Jogo::jogar(bool novaPartida) {
+    if (novaPartida) {
+        cenaAtual = 1;
+        cenasVisitadas.clear();
+        monstrosDerrotados.clear();
+    }
     bool fim = false;
 
     while (!fim) {
@@ -310,7 +517,8 @@ void Jogo::jogar() {
             cenasVisitadas.push_back(cenaAtual);
         }
 
-        // (Aqui entrara o salvamento automatico, a cada nova cena.)
+        // Salvamento automatico: toda vez que uma cena nova eh carregada.
+        salvarJogo();
 
         cout << endl << "==================================================" << endl;
 
@@ -493,32 +701,21 @@ bool Jogo::batalha(Cena& cena) {
     return jogador->estaVivo();
 }
 
-// Recebe uma linha de item "nome;tipo;combate;FA;dano".
+// Recebe uma linha de item "nome;tipo;combate;FA;dano" e repassa para o
+// Inventario do jogador (quem decide o que fazer com cada tipo de item).
 void Jogo::receberItem(string linha) {
     vector<string> campos = dividir(linha, ';');
-
     if (campos.size() < 5) {
         return; // linha mal formatada: ignora
     }
-
     string nome = campos[0];
-    string tipo = campos[1];
+
+    Arma* armaAntes = jogador->getArmaEquipada();
+    jogador->getInventario().adicionarItem(linha);
+    Arma* armaDepois = jogador->getArmaEquipada();
 
     cout << endl << "Voce obteve: " << nome << endl;
-
-    // Por enquanto so armas ('w') tem efeito: a arma nova eh equipada se o jogador
-    // estiver sem arma ou se ela for melhor (FA + dano maiores) que a atual.
-    // Armaduras ('r') e itens comuns ('c') entram na etapa do inventario.
-    if (tipo == "w") {
-        bool combate = (campos[2] == "1");
-        int fa = stoi(campos[3]);
-        int dano = stoi(campos[4]);
-
-        Arma* atual = jogador->getArmaEquipada();
-
-        if (atual == nullptr || (fa + dano) > (atual->getFA() + atual->getDano())) {
-            jogador->equiparArma(new Arma(nome, combate, fa, dano));
-            cout << "(" << nome << " foi equipada)" << endl;
-        }
+    if (armaDepois != armaAntes && armaDepois != nullptr) {
+        cout << "(" << armaDepois->getNome() << " foi equipada)" << endl;
     }
 }

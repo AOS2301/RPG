@@ -29,7 +29,9 @@ public:
     void distribuirPontos();   // tela de evolucao do personagem
 
     // Loop da aventura
-    void jogar();
+    // novaPartida=true zera o progresso (cena 1); false continua de onde o
+    // jogo salvo (carregarJogo) deixou, sem mexer em cenaAtual/vetores.
+    void jogar(bool novaPartida = true);
     void executarCenaNormal(Cena& cena, bool& fim, bool primeiraVez);
     void executarCenaMonstro(Cena& cena);
     bool batalha(Cena& cena);
@@ -38,7 +40,15 @@ public:
     // Controle do que ja aconteceu na aventura
     bool foiVisitada(int numeroCena);
     bool jaDerrotou(int numeroCena);
+
+    // Salvar/Carregar (ver secao "Salvar/Carregar" do enunciado).
+    // Cada personagem tem seu proprio arquivo (data/<nome>.txt), o que de
+    // quebra permite manter mais de uma partida salva ao mesmo tempo.
+    void salvarJogo();
+    bool carregarJogo(string nome); // false se nao existe save com esse nome (ou arquivo invalido)
 private:
+    string caminhoSave(string nome); // monta "data/<nome>.txt"
+
     Jogador* jogador;
     int cenaAtual;
     vector<int> cenasVisitadas;     // cenas que o jogador ja viu

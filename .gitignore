@@ -1,0 +1,7 @@
+# Arquivos gerados pela compilacao
+*.o
+*.exe
+*.out
+
+# Saves do jogo (um arquivo por personagem, gerado em tempo de execucao)
+data/*.txt

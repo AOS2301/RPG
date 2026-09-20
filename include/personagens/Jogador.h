@@ -3,6 +3,7 @@
 
 #include "Personagem.h"
 #include "../armas/Arma.h"
+#include "../inventario/Inventario.h"
 
 
 class Jogador : public Personagem
@@ -18,8 +19,11 @@ public:
     ~Jogador() override;
 
     void atacar(Personagem* alvo) override;
-    void equiparArma(Arma* arma);
-    Arma* getArmaEquipada();
+
+    // ---- Inventario (armas, itens, ouro, provisoes) ----
+    Inventario& getInventario();
+    void equiparArma(Arma* arma); // atalho para getInventario().equiparArma
+    Arma* getArmaEquipada();      // atalho para getInventario().getArmaEquipada
 
     // ---- Evolucao ----
     int getNivel();
@@ -30,7 +34,12 @@ public:
     bool podeEvoluir();                    // ha pontos E algum atributo abaixo do limite?
     bool evoluirAtributo(char atributo);   // 'h' habilidade, 'e' energia, 's' sorte
 
-    // ---- Recursos ----
+    // Setters usados so para restaurar um jogo salvo (carregarJogo).
+    void setNivel(int nivel);
+    void setExperiencia(int experiencia);
+    void setPontosEvolucao(int pontosEvolucao);
+
+    // ---- Recursos (atalhos para o Inventario) ----
     void adicionarOuro(int quantidade);
     int getOuro();
     void adicionarProvisoes(int quantidade);
@@ -38,12 +47,10 @@ public:
     bool usarProvisao();                   // +4 de energia (so fora de combate)
 
 protected:
-    Arma* armaEquipada;
+    Inventario inventario;
     int nivel;
     int experiencia;     // experiencia acumulada dentro do nivel atual
     int pontosEvolucao;  // pontos ainda nao distribuidos
-    int ouro;
-    int provisoes;
 };
 
 #endif // JOGADOR_H

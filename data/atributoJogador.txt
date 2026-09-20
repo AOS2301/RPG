@@ -1,1 +1,0 @@
-//Arquivo que irá ser populado com todas as informações de energia, habilidade e sorte do jogador

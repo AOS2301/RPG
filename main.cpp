@@ -1,8 +1,9 @@
 #include <iostream>
+#include "src/armas/Arma.cpp"
+#include "src/inventario/Inventario.cpp"
 #include "src/personagens/Personagem.cpp"
 #include "src/personagens/Jogador.cpp"
 #include "src/personagens/Monstro.cpp"
-#include "src/armas/Arma.cpp"
 #include "src/jogo/Jogo.cpp"
 #include "src/jogo/Cena.cpp"
 
