@@ -1,7 +1,8 @@
-# Arquivos gerados pela compilacao
+# Arquivos gerados pela compilacao (ver Makefile)
 *.o
 *.exe
 *.out
+jogo
 
 # Saves do jogo (um arquivo por personagem, gerado em tempo de execucao)
 data/*.txt

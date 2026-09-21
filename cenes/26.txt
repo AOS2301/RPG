@@ -1,0 +1,12 @@
+#1
+Ferido e sem forcas, voce se arrasta para longe do topo da torre e encontra um pequeno santuario escondido nas ruinas, protegido pelos guardioes que vieram antes de voce.
+
+Entre os escombros, um vulto sussurra com a voz do seu pai:
+
+"Ainda nao acabou. Um guardiao cai, mas se levanta mais forte."
+
+Sob uma laje quebrada, voce encontra uma lamina esquecida, forjada pelos primeiros guardioes de Auren, e um frasco selado com o simbolo da chama. Voce sente suas forcas renovadas.
+
+I: Lamina do Ultimo Guardiao;w;1;3;3
+I: Elixir da Chama;c;1;0;4
+#27: Reunir forcas e enfrentar Vaelthar mais uma vez

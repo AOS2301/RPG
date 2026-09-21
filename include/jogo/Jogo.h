@@ -35,6 +35,7 @@ public:
     void executarCenaNormal(Cena& cena, bool& fim, bool primeiraVez);
     void executarCenaMonstro(Cena& cena);
     bool batalha(Cena& cena);
+    void usarMagia(Monstro& monstro); // submenu de "Usar Magia" dentro da batalha
     void receberItem(string linha);
 
     // Controle do que ja aconteceu na aventura

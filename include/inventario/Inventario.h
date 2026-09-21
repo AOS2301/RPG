@@ -17,40 +17,35 @@ class Inventario
 {
 public:
     Inventario();
-    ~Inventario(); // libera as armas guardadas
-
-    // Recebe uma linha "nome;tipo;combate;FA;dano" (mesmo formato usado
-    // nos arquivos de cena). Armas (tipo 'w') entram na lista de armas e
-    // podem ser equipadas automaticamente; armaduras ('r') e itens
-    // comuns ('c') entram na lista de outros itens.
+    ~Inventario();
     void adicionarItem(string linha);
 
-    // ---- Armas ----
-    void equiparArma(Arma* arma); // adiciona a lista (se necessario) e equipa
-    Arma* getArmaEquipada();
+    void equiparArma(Arma *arma);
+    Arma *getArmaEquipada();
     int getQuantidadeArmas();
-    Arma* getArma(int indice);
+    Arma *getArma(int indice);
 
-    // ---- Outros itens (armaduras e itens comuns) ----
+    int getQuantidadeItensMagicos();
+    Arma *getItemMagico(int indice);
+    Arma *consumirItemMagico(int indice); 
+
     int getQuantidadeOutrosItens();
     string getOutroItem(int indice);
 
-    // ---- Ouro ----
     void adicionarOuro(int quantidade);
     int getOuro();
 
-    // ---- Provisoes ----
     void adicionarProvisoes(int quantidade);
     int getProvisoes();
-    bool consumirProvisao(); // decrementa 1 provisao; retorna false se nao havia
+    bool consumirProvisao();
 
-    // ---- Persistencia ----
-    void salvar(ofstream& arquivo);
-    bool carregar(ifstream& arquivo); // false = arquivo incompleto/corrompido
+    void salvar(ofstream &arquivo);
+    bool carregar(ifstream &arquivo);
 
 private:
-    vector<Arma*> armas;
-    Arma* armaEquipada;
+    vector<Arma *> armas;
+    Arma *armaEquipada;
+    vector<Arma *> itensMagicos;
     vector<string> outrosItens;
     int ouro;
     int provisoes;

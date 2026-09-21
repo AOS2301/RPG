@@ -1,0 +1,15 @@
+m
+Vaelthar ainda esta de pe entre as ruinas do farol, mas agora voce carrega uma lamina mais forte e a certeza de que nao pode falhar de novo.
+
+"Voce insiste em resistir", ele diz, sombrio. "Entao vou terminar o que comecei."
+
+A segunda batalha comeca, mais dura que a primeira.
+
+N: Vaelthar, o Rei da Ruina
+M: S
+H: 14
+S: 4
+E: 20
+T: 50
+P: 5
+18;28
