@@ -32,6 +32,7 @@ public:
     void recuperarEnergia(int quantidade); // nunca passa da energia maxima
     bool estaVivo();
     bool testarSorte();
+    void decrementarSorte(); 
 
 protected:
     string nome;

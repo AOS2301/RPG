@@ -114,7 +114,7 @@ void Jogo::criarPersonagem()
         nome = "Aventureiro";
     }
 
-    int habilidadeExtra, energiaExtra, sorteExtra;
+    int habilidadeExtra, energiaExtra, sorteExtra, pontosExtras, pontosSobrando;
 
     while (true)
     {
@@ -125,23 +125,26 @@ void Jogo::criarPersonagem()
         cout << "Pontos extras em SORTE (0-6): ";
         sorteExtra = lerInteiro();
 
+        pontosExtras = habilidadeExtra + energiaExtra + sorteExtra;
         if (habilidadeExtra < 0 || habilidadeExtra > 6 ||
             energiaExtra < 0 || energiaExtra > 12 ||
-            sorteExtra < 0 || sorteExtra > 6)
-        {
+            sorteExtra < 0 || sorteExtra > 6){
             cout << endl
                  << "Valor fora dos limites. Tente de novo." << endl
                  << endl;
-        }
-        else if (habilidadeExtra + energiaExtra + sorteExtra != 12)
-        {
+        } else if (pontosExtras > 12) {
+            cout << endl
+                 << "A soma dos pontos extras ficou maior que 12: (soma = "
+                 << pontosExtras << "). Tente de novo." << endl
+                 << endl;
+        } else if (pontosExtras != 12)  {
             cout << endl
                  << "A soma dos pontos extras ficou em "
-                 << habilidadeExtra + energiaExtra + sorteExtra << ". Abra o Menu caso queira ajustar seus pontos." << endl
+                 << pontosExtras << ". Abra o Menu caso queira ajustar seus pontos." << endl
                  << endl;
-        }
-        else
-        {
+                 pontosSobrando = 12 - pontosExtras;
+                 break;
+        } else {
             break;
         }
     }
@@ -149,6 +152,9 @@ void Jogo::criarPersonagem()
     // Se ja havia um personagem (novo jogo depois de outro), libera o antigo.
     delete jogador;
     jogador = new Jogador(nome, 6 + habilidadeExtra, 12 + energiaExtra, 6 + sorteExtra);
+    if(pontosSobrando > 0) {
+        jogador->setPontosEvolucao(pontosSobrando);
+    }
 
     cout << endl;
     mostrarFicha();
@@ -648,10 +654,48 @@ void Jogo::jogar(bool novaPartida)
         {
             executarCenaMonstro(cena);
         }
+        else if (cena.ehTesteDeSorte())
+        {
+            executarCenaTesteSorte(cena);
+        }
         else
         {
             executarCenaNormal(cena, fim, primeiraVez);
         }
+    }
+}
+
+void Jogo::executarCenaTesteSorte(Cena &cena)
+{
+    cout << cena.getTexto() << endl;
+
+    int dado = (rand() % 6) + 1;
+    int total = dado + jogador->getSorte();
+
+    cout << "Testando a Sorte..." << endl;
+    cout << "Dado (1-6): " << dado << " + Sorte (" << jogador->getSorte() << ") = " << total
+         << " (precisa de mais que " << cena.getDificuldadeSorte() << ")" << endl;
+
+    jogador->decrementarSorte(); // usar a Sorte gasta 1 ponto, com sucesso ou nao
+
+    if (total > cena.getDificuldadeSorte())
+    {
+        cout << "Sucesso! Voce consegue passar em seguranca." << endl;
+        cenaAtual = cena.getDestinoSucesso();
+    }
+    else
+    {
+        cout << "Falha! Voce se machuca na tentativa." << endl;
+        jogador->receberDano(cena.getDanoFalhaSorte());
+        cout << "Voce perdeu " << cena.getDanoFalhaSorte() << " pontos de energia." << endl;
+
+        if (!jogador->estaVivo())
+        {
+            // Decisao igual a derrota em combate: nao morre so pela queda.
+            jogador->setEnergia((jogador->getEnergiaMaxima() + 1) / 2);
+        }
+
+        cenaAtual = cena.getDestinoDerrota();
     }
 }
 
@@ -879,9 +923,6 @@ bool Jogo::batalha(Cena &cena)
     return jogador->estaVivo();
 }
 
-// Submenu de "Usar Magia": escolhe um item magico e aplica dano garantido
-// no monstro (a magia sempre acerta - eh o que a diferencia do ataque
-// fisico, que depende da rolagem de FA). O item eh consumido (uso unico).
 void Jogo::usarMagia(Monstro &monstro)
 {
     Inventario &inv = jogador->getInventario();

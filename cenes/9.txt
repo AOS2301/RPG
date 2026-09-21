@@ -1,19 +1,19 @@
 m
-No caminho para o topo da fortaleza, você encontra uma sala circular destruída. No centro está seu pai.
+No caminho para o topo da fortaleza, voce encontra uma sala circular destruida. No centro esta seu pai.
 
-Por pouco mais de três anos, você imaginou encontrar um cadáver. Agora ele está diante de você, vivo, mas irreconhecível. Veios escuros percorrem seu rosto e uma corrente de sombra envolve seu braço.
+Por pouco mais de tres anos, voce imaginou encontrar um cadaver. Agora ele esta diante de voce, vivo, mas irreconhecivel. Veios escuros percorrem seu rosto e uma corrente de sombra envolve seu braco.
 
 Ele ergue os olhos.
 
-"Você... não deveria ter vindo."
+"Voce... nao deveria ter vindo."
 
-Por um instante, sua voz é a mesma que você recorda da infância. Então o feitiço de Vaelthar assume o controle.
+Por um instante, sua voz e a mesma que voce recorda da infancia. Entao o feitico de Vaelthar assume o controle.
 
-"Meu filho não existe mais. Só existe o dever."
+"Meu filho nao existe mais. So existe o dever."
 
-Seu pai ataca, lutando contra você e contra a magia que o domina.
+Seu pai ataca, lutando contra voce e contra a magia que o domina.
 
-N: Auren, o Guardião Corrompido
+N: Auren, o Guardiao Corrompido
 M: S
 H: 13
 S: 12

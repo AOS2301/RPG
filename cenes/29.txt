@@ -1,0 +1,10 @@
+s
+A ponte de pedra em ruinas se estende diante de voce. Parte do vao caiu ha muito tempo e o que resta range com o vento.
+
+Nao ha outro caminho visivel ate a fortaleza. Voce respira fundo e comeca a atravessar, testando cada pedra antes de apoiar o peso.
+
+No meio do caminho, uma das pedras cede sob seus pes.
+
+D: 8
+X: 4
+3;3

@@ -17,6 +17,7 @@ public:
     bool carregar(string caminho);
 
     bool ehMonstro();
+    bool ehTesteDeSorte();
     string getTexto();
 
     // Opcoes de escolha (linhas "#N: texto")
@@ -38,8 +39,16 @@ public:
     int getDestinoSucesso();
     int getDestinoDerrota();
 
+    // Dados do teste de sorte (so fazem sentido se ehTesteDeSorte() for true).
+    // Uso da Sorte fora de combate, conforme o enunciado: rola-se 1d6 e soma
+    // com a Sorte do personagem; se o total for maior que a dificuldade, ele
+    // passa. Se nao, sofre o dano definido na propria cena.
+    int getDificuldadeSorte();
+    int getDanoFalhaSorte();
+
 private:
     bool monstro;
+    bool testeSorte;
     string texto;
     vector<string> textosOpcoes;
     vector<int> destinosOpcoes;
@@ -53,6 +62,9 @@ private:
     int provisoes;
     int destinoSucesso;
     int destinoDerrota;
+
+    int dificuldadeSorte;
+    int danoFalhaSorte;
 
     void limpar();
 };

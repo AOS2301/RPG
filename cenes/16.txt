@@ -1,13 +1,13 @@
 #1
-A passagem secreta leva a uma galeria esquecida, onde antigos guardiões esconderam suprimentos e mapas.
+A passagem secreta leva a uma galeria esquecida, onde antigos guardioes esconderam suprimentos e mapas.
 
-Em uma parede, você encontra uma mensagem escrita por seu pai:
+Em uma parede, voce encontra uma mensagem escrita por seu pai:
 
-"Se eu não voltar, não permita que minha história termine comigo. A Ordem pode ter falhado, mas proteger alguém ainda significa escolher lutar."
+"Se eu nao voltar, nao permita que minha historia termine comigo. A Ordem pode ter falhado, mas proteger alguem ainda significa escolher lutar."
 
-Um mapa indica uma rota até a Câmara da Primeira Chama. Ao longe, uma luz dourada pulsa sob a pedra.
+Um mapa indica uma rota ate a Camara da Primeira Chama. Ao longe, uma luz dourada pulsa sob a pedra.
 
-Você aperta o medalhão e segue adiante, decidido a descobrir toda a verdade sobre Vaelthar e o destino de seu pai.
+Voce aperta o medalhao e segue adiante, decidido a descobrir toda a verdade sobre Vaelthar e o destino de seu pai.
 
-#7: Retornar às minas e alcançar a Câmara da Primeira Chama
-#6: Voltar à sala de manutenção e procurar outra rota
+#7: Retornar as minas e alcancar a Camara da Primeira Chama
+#6: Voltar a sala de manutencao e procurar outra rota

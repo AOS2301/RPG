@@ -1,10 +1,10 @@
 #1
-O Sentinela de Ferro foi derrotado, mas seu núcleo ainda pulsa. Antes de seguir, você encontra uma gravação antiga da Ordem.
+O Sentinela de Ferro foi derrotado, mas seu nucleo ainda pulsa. Antes de seguir, voce encontra uma gravacao antiga da Ordem.
 
-"Apenas um descendente de Auren poderá reacender o farol. Mas a chama exigirá uma memória, uma promessa ou uma vida."
+"Apenas um descendente de Auren podera reacender o farol. Mas a chama exigira uma memoria, uma promessa ou uma vida."
 
-A mensagem explica que seu pai tentou pagar o preço sozinho e acabou sendo capturado por Vaelthar.
+A mensagem explica que seu pai tentou pagar o preco sozinho e acabou sendo capturado por Vaelthar.
 
-Você compreende que a batalha final não será apenas pela fortaleza, mas pela escolha de como honrar o sacrifício dele.
+Voce compreende que a batalha final nao sera apenas pela fortaleza, mas pela escolha de como honrar o sacrificio dele.
 
-#6: Retornar à sala de manutenção e procurar outra rota
+#6: Retornar a sala de manutencao e procurar outra rota

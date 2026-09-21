@@ -1,14 +1,14 @@
 #1
-Você chega à Câmara da Primeira Chama. Uma esfera dourada flutua sobre um pedestal coberto de inscrições.
+Voce chega a Camara da Primeira Chama. Uma esfera dourada flutua sobre um pedestal coberto de inscricoes.
 
-Ao tocar o pedestal, uma visão surge: seu pai está ajoelhado diante de Vaelthar. Correntes de sombra envolvem seu corpo, enquanto o rei pronuncia:
+Ao tocar o pedestal, uma visao surge: seu pai esta ajoelhado diante de Vaelthar. Correntes de sombra envolvem seu corpo, enquanto o rei pronuncia:
 
-"Abandone essa Ordem. A proteção é uma mentira inventada pelos fracos. Sirva ao poder, e nunca mais perderá alguém."
+"Abandone essa Ordem. A protecao e uma mentira inventada pelos fracos. Sirva ao poder, e nunca mais perdera alguem."
 
-Seu pai tenta resistir, mas a visão termina antes de mostrar o desfecho.
+Seu pai tenta resistir, mas a visao termina antes de mostrar o desfecho.
 
-Uma inscrição revela que a chama reage à vontade de quem a carrega. Você a recolhe, sentindo uma presença sombria observando seus movimentos.
+Uma inscricao revela que a chama reage a vontade de quem a carrega. Voce a recolhe, sentindo uma presenca sombria observando seus movimentos.
 
 I: Chama Primordial;c;1;0;0
-#9: Subir até o topo da Fortaleza de Auren
-#24: Descer à cripta dos guardiões antes de subir
+#9: Subir ate o topo da Fortaleza de Auren
+#24: Descer a cripta dos guardioes antes de subir

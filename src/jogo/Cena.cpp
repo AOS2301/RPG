@@ -21,6 +21,7 @@ Cena::Cena() {
 
 void Cena::limpar() {
     monstro = false;
+    testeSorte = false;
     texto = "";
     textosOpcoes.clear();
     destinosOpcoes.clear();
@@ -33,6 +34,8 @@ void Cena::limpar() {
     provisoes = 0;
     destinoSucesso = 0;
     destinoDerrota = 0;
+    dificuldadeSorte = 0;
+    danoFalhaSorte = 0;
 }
 
 bool Cena::carregar(string caminho) {
@@ -47,10 +50,12 @@ bool Cena::carregar(string caminho) {
 
     string linha;
 
-    // 1a linha: "#N" (cena de narrativa) ou "m" (cena de monstro).
+    // 1a linha: "#N" (cena de narrativa), "m" (cena de monstro) ou
+    // "s" (teste de sorte fora de combate, ex: atravessar uma ponte).
     getline(arquivo, linha);
     linha = aparar(linha);
     monstro = (!linha.empty() && linha[0] == 'm');
+    testeSorte = (!linha.empty() && linha[0] == 's');
 
     // Demais linhas: cada uma eh texto, opcao, item ou dado do monstro.
     while (getline(arquivo, linha)) {
@@ -86,8 +91,17 @@ bool Cena::carregar(string caminho) {
         else if (monstro && linha.substr(0, 2) == "M:") {
             // Campo "M" aparece nos arquivos, mas nao eh descrito no enunciado. Ignorado por enquanto.
         }
-        else if (monstro && !linha.empty() && isdigit(linha[0])) {
-            // "12;13" -> cena se vencer ; cena se perder
+        else if (testeSorte && linha.substr(0, 2) == "D:") {
+            // Dificuldade do teste: 1d6 + Sorte precisa ser MAIOR que esse valor.
+            dificuldadeSorte = stoi(linha.substr(2));
+        }
+        else if (testeSorte && linha.substr(0, 2) == "X:") {
+            // Dano sofrido se o jogador falhar no teste.
+            danoFalhaSorte = stoi(linha.substr(2));
+        }
+        else if ((monstro || testeSorte) && !linha.empty() && isdigit(linha[0])) {
+            // "12;13" -> cena se vencer/passar ; cena se perder/falhar
+            // (mesma convencao usada nas cenas de monstro)
             size_t pontoEVirgula = linha.find(';');
             destinoSucesso = stoi(linha.substr(0, pontoEVirgula));
             destinoDerrota = stoi(linha.substr(pontoEVirgula + 1));
@@ -103,6 +117,7 @@ bool Cena::carregar(string caminho) {
 }
 
 bool Cena::ehMonstro() { return monstro; }
+bool Cena::ehTesteDeSorte() { return testeSorte; }
 string Cena::getTexto() { return texto; }
 
 int Cena::getQuantidadeOpcoes() { return static_cast<int>(textosOpcoes.size()); }
@@ -120,3 +135,6 @@ int Cena::getOuro() { return ouro; }
 int Cena::getProvisoes() { return provisoes; }
 int Cena::getDestinoSucesso() { return destinoSucesso; }
 int Cena::getDestinoDerrota() { return destinoDerrota; }
+
+int Cena::getDificuldadeSorte() { return dificuldadeSorte; }
+int Cena::getDanoFalhaSorte() { return danoFalhaSorte; }

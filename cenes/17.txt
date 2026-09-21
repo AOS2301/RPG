@@ -1,10 +1,10 @@
 m
-As muralhas do Farol de Âmbar tremem enquanto Vaelthar canaliza a energia corrompida da Chama Primordial. Seus olhos brilham com uma fúria gélida.
-"Você ousa desafiar o verdadeiro mestre de Valdora?", ele ruge, brandindo sua lâmina sombria.
+As muralhas do Farol de Ambar tremem enquanto Vaelthar canaliza a energia corrompida da Chama Primordial. Seus olhos brilham com uma furia gelida.
+"Voce ousa desafiar o verdadeiro mestre de Valdora?", ele ruge, brandindo sua lamina sombria.
 
-A batalha é implacável. Cada golpe ecoa como o trovão nas pedras ancestrais.
+A batalha e implacavel. Cada golpe ecoa como o trovao nas pedras ancestrais.
 
-N: Vaelthar, o Rei da Ruína
+N: Vaelthar, o Rei da Ruina
 M: S
 H: 14
 S: 4

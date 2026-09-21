@@ -34,6 +34,7 @@ public:
     void jogar(bool novaPartida = true);
     void executarCenaNormal(Cena& cena, bool& fim, bool primeiraVez);
     void executarCenaMonstro(Cena& cena);
+    void executarCenaTesteSorte(Cena& cena); // teste de sorte fora de combate (ex: atravessar uma ponte)
     bool batalha(Cena& cena);
     void usarMagia(Monstro& monstro); // submenu de "Usar Magia" dentro da batalha
     void receberItem(string linha);

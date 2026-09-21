@@ -40,6 +40,12 @@ bool Personagem::testarSorte() {
     return sorteio <= sorte;
 }
 
+void Personagem::decrementarSorte() {
+    if (sorte > 0) {
+        sorte--;
+    }
+}
+
 string Personagem::getNome(){ 
     return nome; 
 }

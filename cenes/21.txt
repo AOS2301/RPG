@@ -1,12 +1,12 @@
 #21
-Com os ratos afastados, você vasculha o alojamento. Entre pertences deixados às pressas, encontra uma lanterna de mineiro ainda com óleo e um diário de turno.
+Com os ratos afastados, voce vasculha o alojamento. Entre pertences deixados as pressas, encontra uma lanterna de mineiro ainda com oleo e um diario de turno.
 
-A última página descreve um túnel de ventilação que corta a rocha por cima do salão principal das minas.
+A ultima pagina descreve um tunel de ventilacao que corta a rocha por cima do salao principal das minas.
 
-"Só os mais magros passam", diz a anotação. "Mas ninguém precisa enfrentar o que mora lá embaixo."
+"So os mais magros passam", diz a anotacao. "Mas ninguem precisa enfrentar o que mora la embaixo."
 
-Você pode seguir o túnel ou voltar à sala de manutenção.
+Voce pode seguir o tunel ou voltar a sala de manutencao.
 
 I: Lanterna de mineiro;c;0;0;0
-#22: Seguir pelo túnel de ventilação
-#6: Voltar à sala de manutenção
+#30: Seguir pelo tunel de ventilacao
+#6: Voltar a sala de manutencao

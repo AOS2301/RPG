@@ -1,8 +1,8 @@
 #1
-O Sentinela de Ferro vence o combate e o prende em uma cela subterrânea. Durante a noite, você ouve vozes: mineiros e antigos ajudantes da Ordem também estão presos.
+O Sentinela de Ferro vence o combate e o prende em uma cela subterranea. Durante a noite, voce ouve vozes: mineiros e antigos ajudantes da Ordem tambem estao presos.
 
-Um deles afirma ter visto seu pai três anos antes, sendo levado até o topo da fortaleza por soldados de Vaelthar.
+Um deles afirma ter visto seu pai tres anos antes, sendo levado ate o topo da fortaleza por soldados de Vaelthar.
 
-Com a ajuda dos prisioneiros, você encontra uma passagem de serviço.
+Com a ajuda dos prisioneiros, voce encontra uma passagem de servico.
 
 #16: Escapar pelas galerias abandonadas

@@ -1,9 +1,9 @@
 #25
-O guardião se desfaz em pó e o silêncio volta à cripta. No nicho mais fundo, você encontra a espada que ele protegia, ainda afiada apesar dos anos.
+O guardiao se desfaz em po e o silencio volta a cripta. No nicho mais fundo, voce encontra a espada que ele protegia, ainda afiada apesar dos anos.
 
-Gravada na lâmina, uma frase: "Proteger é escolher lutar."
+Gravada na lamina, uma frase: "Proteger e escolher lutar."
 
-Você descansa por um instante, sente o peso do medalhão e decide subir ao encontro do que o espera no topo da fortaleza.
+Voce descansa por um instante, sente o peso do medalhao e decide subir ao encontro do que o espera no topo da fortaleza.
 
-I: Espada dos Guardiões;w;1;2;2
-#9: Subir até o topo da Fortaleza de Auren
+I: Espada dos Guardioes;w;1;2;2
+#9: Subir ate o topo da Fortaleza de Auren
