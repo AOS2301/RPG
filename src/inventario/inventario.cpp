@@ -1,136 +1,248 @@
 #include "../../include/inventario/Inventario.h"
+#include "../../include/util/Texto.h"
 
-// Quebra "Adaga de prata;w;1;1;1" em {"Adaga de prata","w","1","1","1"}.
-// Mesma logica de Jogo::dividir, mas com nome proprio: como main.cpp
-// inclui os .cpp diretamente, duas funcoes "static" de mesmo nome em
-// arquivos diferentes acabam colidindo na mesma unidade de compilacao.
-static vector<string> dividirCampos(string texto, char separador) {
-    vector<string> partes;
-    string atual = "";
-
-    for (size_t i = 0; i < texto.size(); i++) {
-        if (texto[i] == separador) {
-            partes.push_back(atual);
-            atual = "";
-        } else {
-            atual += texto[i];
-        }
-    }
-    partes.push_back(atual);
-    return partes;
-}
-
-Inventario::Inventario() {
+Inventario::Inventario()
+{
     armaEquipada = nullptr;
+    armaduraEquipada = nullptr;
     ouro = 0;
     provisoes = 0;
 }
 
-Inventario::~Inventario() {
-    for (size_t i = 0; i < armas.size(); i++) {
-        delete armas[i];
-    }
-    for (size_t i = 0; i < itensMagicos.size(); i++) {
-        delete itensMagicos[i];
-    }
+Inventario::~Inventario()
+{
+    liberarItens();
 }
 
-// Recebe uma linha "nome;tipo;combate;FA;dano" vinda de uma cena.
-void Inventario::adicionarItem(string linha) {
-    vector<string> campos = dividirCampos(linha, ';');
-    if (campos.size() < 5) {
-        return; // linha mal formatada: ignora
+void Inventario::liberarItens()
+{
+    for (size_t i = 0; i < armas.size(); i++)
+    {
+        delete armas[i];
+    }
+    for (size_t i = 0; i < armaduras.size(); i++)
+    {
+        delete armaduras[i];
+    }
+    for (size_t i = 0; i < itensMagicos.size(); i++)
+    {
+        delete itensMagicos[i];
+    }
+    for (size_t i = 0; i < itensComuns.size(); i++)
+    {
+        delete itensComuns[i];
+    }
+    armas.clear();
+    armaduras.clear();
+    itensMagicos.clear();
+    itensComuns.clear();
+    armaEquipada = nullptr;
+    armaduraEquipada = nullptr;
+}
+
+// Le "nome;tipo;combate;FA;dano", cria o objeto do tipo certo e guarda na
+// lista correspondente. Usado tanto para itens de cena quanto no carregar.
+Item *Inventario::guardarItem(string linha)
+{
+    vector<string> campos = dividir(linha, ';');
+    if (campos.size() != 5)
+    {
+        return nullptr; // linha mal formatada
     }
 
-    string nome = campos[0];
-    string tipo = campos[1];
-    bool combate = (campos[2] == "1");
-    int fa = stoi(campos[3]);
-    int dano = stoi(campos[4]);
+    string nome = aparar(campos[0]);
+    string tipo = aparar(campos[1]);
+    bool combate = (aparar(campos[2]) == "1");
+    int fa;
+    int dano;
+    try
+    {
+        fa = stoi(campos[3]);
+        dano = stoi(campos[4]);
+    }
+    catch (...)
+    {
+        return nullptr; // FA ou dano nao eram numeros
+    }
 
-    if (tipo == "w") {
-        Arma* nova = new Arma(nome, combate, fa, dano);
-        armas.push_back(nova);
+    if (tipo == "w")
+    {
+        Arma *arma = new Arma(nome, combate, fa, dano);
+        armas.push_back(arma);
+        return arma;
+    }
+    if (tipo == "r")
+    {
+        Armadura *armadura = new Armadura(nome, combate, fa, dano);
+        armaduras.push_back(armadura);
+        return armadura;
+    }
+    if (tipo == "c" && combate)
+    {
+        ItemMagico *magico = new ItemMagico(nome, fa, dano);
+        itensMagicos.push_back(magico);
+        return magico;
+    }
 
-        // Equipa automaticamente se ainda nao ha arma ou se a nova for melhor
-        // (soma de FA + dano maior que a equipada atualmente).
-        if (armaEquipada == nullptr || (fa + dano) > (armaEquipada->getFA() + armaEquipada->getDano())) {
+    Item *comum = new Item(nome, 'c', combate, fa, dano);
+    itensComuns.push_back(comum);
+    return comum;
+}
+
+Item *Inventario::adicionarItem(string linha)
+{
+    Item *item = guardarItem(linha);
+    if (item == nullptr)
+    {
+        return nullptr;
+    }
+
+    // Equipa automaticamente se ainda nao ha nada equipado ou se o item
+    // novo for melhor (soma de FA + dano maior). O jogador pode trocar
+    // depois pela ficha do personagem.
+    if (item->getTipo() == 'w')
+    {
+        Arma *nova = armas.back();
+        if (armaEquipada == nullptr ||
+            nova->getFA() + nova->getDano() > armaEquipada->getFA() + armaEquipada->getDano())
+        {
             armaEquipada = nova;
         }
     }
-    else if (tipo == "c" && combate) {
-        // Item comum utilizavel em combate = item magico (enunciado: quem
-        // nao eh mago usa magia "atraves de itens"). Reaproveita a classe
-        // Arma so para guardar nome/FA/dano; Jogo::batalha decide o dano.
-        itensMagicos.push_back(new Arma(nome, combate, fa, dano));
-    }
-    else if (tipo == "r") {
-        outrosItens.push_back(nome + " (armadura)");
-    }
-    else {
-        outrosItens.push_back(nome + " (item)");
-    }
-}
-
-void Inventario::equiparArma(Arma* arma) {
-    if (arma == nullptr) {
-        return;
-    }
-
-    // Garante que a arma faca parte da lista antes de equipar.
-    bool jaEstaNaLista = false;
-    for (size_t i = 0; i < armas.size(); i++) {
-        if (armas[i] == arma) {
-            jaEstaNaLista = true;
-            break;
+    else if (item->getTipo() == 'r')
+    {
+        Armadura *nova = armaduras.back();
+        if (armaduraEquipada == nullptr ||
+            nova->getFA() + nova->getDano() > armaduraEquipada->getFA() + armaduraEquipada->getDano())
+        {
+            armaduraEquipada = nova;
         }
     }
-    if (!jaEstaNaLista) {
-        armas.push_back(arma);
-    }
 
-    armaEquipada = arma;
+    return item;
 }
 
-Arma* Inventario::getArmaEquipada() { return armaEquipada; }
-int Inventario::getQuantidadeArmas() { return static_cast<int>(armas.size()); }
-Arma* Inventario::getArma(int indice) { return armas.at(indice); }
+// ---- Armas ----
 
-int Inventario::getQuantidadeItensMagicos() { return static_cast<int>(itensMagicos.size()); }
-Arma* Inventario::getItemMagico(int indice) { return itensMagicos.at(indice); }
+int Inventario::getQuantidadeArmas()
+{
+    return static_cast<int>(armas.size());
+}
 
-// Remove o item da lista e devolve o ponteiro (uso unico: quem chama fica
-// responsavel por usar o dano e depois dar "delete").
-Arma* Inventario::consumirItemMagico(int indice) {
-    if (indice < 0 || indice >= static_cast<int>(itensMagicos.size())) {
+Arma *Inventario::getArma(int indice)
+{
+    return armas.at(indice);
+}
+
+Arma *Inventario::getArmaEquipada()
+{
+    return armaEquipada;
+}
+
+bool Inventario::equiparArma(int indice)
+{
+    if (indice < 0 || indice >= static_cast<int>(armas.size()))
+    {
+        return false;
+    }
+    armaEquipada = armas[indice];
+    return true;
+}
+
+// ---- Armaduras ----
+
+int Inventario::getQuantidadeArmaduras()
+{
+    return static_cast<int>(armaduras.size());
+}
+
+Armadura *Inventario::getArmadura(int indice)
+{
+    return armaduras.at(indice);
+}
+
+Armadura *Inventario::getArmaduraEquipada()
+{
+    return armaduraEquipada;
+}
+
+bool Inventario::equiparArmadura(int indice)
+{
+    if (indice < 0 || indice >= static_cast<int>(armaduras.size()))
+    {
+        return false;
+    }
+    armaduraEquipada = armaduras[indice];
+    return true;
+}
+
+// ---- Itens magicos ----
+
+int Inventario::getQuantidadeItensMagicos()
+{
+    return static_cast<int>(itensMagicos.size());
+}
+
+ItemMagico *Inventario::getItemMagico(int indice)
+{
+    return itensMagicos.at(indice);
+}
+
+ItemMagico *Inventario::removerItemMagico(int indice)
+{
+    if (indice < 0 || indice >= static_cast<int>(itensMagicos.size()))
+    {
         return nullptr;
     }
-    Arma* item = itensMagicos[indice];
+    ItemMagico *item = itensMagicos[indice];
     itensMagicos.erase(itensMagicos.begin() + indice);
     return item;
 }
 
-int Inventario::getQuantidadeOutrosItens() { return static_cast<int>(outrosItens.size()); }
-string Inventario::getOutroItem(int indice) { return outrosItens.at(indice); }
+// ---- Itens comuns ----
 
-void Inventario::adicionarOuro(int quantidade) {
-    if (quantidade > 0) {
+int Inventario::getQuantidadeItensComuns()
+{
+    return static_cast<int>(itensComuns.size());
+}
+
+Item *Inventario::getItemComum(int indice)
+{
+    return itensComuns.at(indice);
+}
+
+// ---- Ouro e provisoes ----
+
+void Inventario::adicionarOuro(int quantidade)
+{
+    if (quantidade > 0)
+    {
         ouro += quantidade;
     }
 }
 
-int Inventario::getOuro() { return ouro; }
+int Inventario::getOuro()
+{
+    return ouro;
+}
 
-void Inventario::adicionarProvisoes(int quantidade) {
-    if (quantidade > 0) {
+void Inventario::adicionarProvisoes(int quantidade)
+{
+    if (quantidade > 0)
+    {
         provisoes += quantidade;
     }
 }
 
-int Inventario::getProvisoes() { return provisoes; }
+int Inventario::getProvisoes()
+{
+    return provisoes;
+}
 
-bool Inventario::consumirProvisao() {
-    if (provisoes <= 0) {
+bool Inventario::consumirProvisao()
+{
+    if (provisoes <= 0)
+    {
         return false;
     }
     provisoes--;
@@ -138,126 +250,92 @@ bool Inventario::consumirProvisao() {
 }
 
 // ------------------------------------------------------------------
-// Persistencia: escreve/le a fatia do arquivo de save que pertence ao
-// Inventario. Formato:
+// Persistencia: parte do arquivo de save que pertence ao Inventario.
+// Os itens sao gravados no MESMO formato das cenas, entao o carregar
+// reaproveita o guardarItem. Formato:
 //
 //   ouro
 //   provisoes
-//   quantidade de armas
-//   uma linha por arma -> nome;combate;fa;dano
-//   indice da arma equipada na lista acima (-1 se nenhuma)
-//   quantidade de itens magicos
-//   uma linha por item magico -> nome;combate;fa;dano
-//   quantidade de outros itens (armaduras/itens comuns)
-//   uma linha por item (texto livre, ja com o tipo escrito, ex: "Escudo (armadura)")
+//   quantidade de itens
+//   uma linha por item -> nome;tipo;combate;FA;dano
+//   indice da arma equipada dentro das armas (-1 se nenhuma)
+//   indice da armadura equipada dentro das armaduras (-1 se nenhuma)
 // ------------------------------------------------------------------
 
-void Inventario::salvar(ofstream& arquivo) {
+void Inventario::salvar(ofstream &arquivo)
+{
     arquivo << ouro << "\n";
     arquivo << provisoes << "\n";
 
-    arquivo << armas.size() << "\n";
-    int indiceEquipada = -1;
-    for (size_t i = 0; i < armas.size(); i++) {
-        Arma* a = armas[i];
-        arquivo << a->getNome() << ";" << (a->getCombate() ? 1 : 0)
-                << ";" << a->getFA() << ";" << a->getDano() << "\n";
-        if (a == armaEquipada) {
-            indiceEquipada = static_cast<int>(i);
+    int quantidade = static_cast<int>(armas.size() + armaduras.size() + itensMagicos.size() + itensComuns.size());
+    arquivo << quantidade << "\n";
+
+    // Armas e armaduras sao gravadas na ordem das listas, entao os indices
+    // de equipados continuam validos quando forem lidos de volta.
+    int indiceArma = -1;
+    for (size_t i = 0; i < armas.size(); i++)
+    {
+        arquivo << armas[i]->paraLinha() << "\n";
+        if (armas[i] == armaEquipada)
+        {
+            indiceArma = static_cast<int>(i);
         }
     }
-    arquivo << indiceEquipada << "\n";
 
-    arquivo << itensMagicos.size() << "\n";
-    for (size_t i = 0; i < itensMagicos.size(); i++) {
-        Arma* m = itensMagicos[i];
-        arquivo << m->getNome() << ";" << (m->getCombate() ? 1 : 0)
-                << ";" << m->getFA() << ";" << m->getDano() << "\n";
+    int indiceArmadura = -1;
+    for (size_t i = 0; i < armaduras.size(); i++)
+    {
+        arquivo << armaduras[i]->paraLinha() << "\n";
+        if (armaduras[i] == armaduraEquipada)
+        {
+            indiceArmadura = static_cast<int>(i);
+        }
     }
 
-    arquivo << outrosItens.size() << "\n";
-    for (size_t i = 0; i < outrosItens.size(); i++) {
-        arquivo << outrosItens[i] << "\n";
+    for (size_t i = 0; i < itensMagicos.size(); i++)
+    {
+        arquivo << itensMagicos[i]->paraLinha() << "\n";
     }
+    for (size_t i = 0; i < itensComuns.size(); i++)
+    {
+        arquivo << itensComuns[i]->paraLinha() << "\n";
+    }
+
+    arquivo << indiceArma << "\n";
+    arquivo << indiceArmadura << "\n";
 }
 
-bool Inventario::carregar(ifstream& arquivo) {
-    string linha;
+bool Inventario::carregar(ifstream &arquivo)
+{
+    liberarItens();
 
-    if (!getline(arquivo, linha)) return false;
-    try { ouro = stoi(linha); } catch (...) { return false; }
-
-    if (!getline(arquivo, linha)) return false;
-    try { provisoes = stoi(linha); } catch (...) { return false; }
-
-    if (!getline(arquivo, linha)) return false;
-    int quantidadeArmas;
-    try { quantidadeArmas = stoi(linha); } catch (...) { return false; }
-
-    for (size_t i = 0; i < armas.size(); i++) {
-        delete armas[i];
+    int quantidade;
+    if (!lerLinhaInteira(arquivo, ouro) ||
+        !lerLinhaInteira(arquivo, provisoes) ||
+        !lerLinhaInteira(arquivo, quantidade))
+    {
+        return false;
     }
-    armas.clear();
-    armaEquipada = nullptr;
 
-    for (int i = 0; i < quantidadeArmas; i++) {
-        if (!getline(arquivo, linha)) return false;
-
-        vector<string> campos = dividirCampos(linha, ';');
-        if (campos.size() != 4) return false;
-
-        try {
-            bool combate = (campos[1] == "1");
-            int fa = stoi(campos[2]);
-            int dano = stoi(campos[3]);
-            armas.push_back(new Arma(campos[0], combate, fa, dano));
-        } catch (...) {
+    for (int i = 0; i < quantidade; i++)
+    {
+        string linha;
+        if (!getline(arquivo, linha) || guardarItem(linha) == nullptr)
+        {
             return false;
         }
     }
 
-    if (!getline(arquivo, linha)) return false;
-    int indiceEquipada;
-    try { indiceEquipada = stoi(linha); } catch (...) { return false; }
-
-    if (indiceEquipada >= 0 && indiceEquipada < static_cast<int>(armas.size())) {
-        armaEquipada = armas[indiceEquipada];
+    int indiceArma;
+    int indiceArmadura;
+    if (!lerLinhaInteira(arquivo, indiceArma) ||
+        !lerLinhaInteira(arquivo, indiceArmadura))
+    {
+        return false;
     }
 
-    if (!getline(arquivo, linha)) return false;
-    int quantidadeMagicos;
-    try { quantidadeMagicos = stoi(linha); } catch (...) { return false; }
-
-    for (size_t i = 0; i < itensMagicos.size(); i++) {
-        delete itensMagicos[i];
-    }
-    itensMagicos.clear();
-
-    for (int i = 0; i < quantidadeMagicos; i++) {
-        if (!getline(arquivo, linha)) return false;
-
-        vector<string> campos = dividirCampos(linha, ';');
-        if (campos.size() != 4) return false;
-
-        try {
-            bool combate = (campos[1] == "1");
-            int fa = stoi(campos[2]);
-            int dano = stoi(campos[3]);
-            itensMagicos.push_back(new Arma(campos[0], combate, fa, dano));
-        } catch (...) {
-            return false;
-        }
-    }
-
-    if (!getline(arquivo, linha)) return false;
-    int quantidadeOutros;
-    try { quantidadeOutros = stoi(linha); } catch (...) { return false; }
-
-    outrosItens.clear();
-    for (int i = 0; i < quantidadeOutros; i++) {
-        if (!getline(arquivo, linha)) return false;
-        outrosItens.push_back(linha);
-    }
-
+    // Indice -1 (ou invalido) simplesmente deixa nada equipado.
+    equiparArma(indiceArma);
+    equiparArmadura(indiceArmadura);
     return true;
 }

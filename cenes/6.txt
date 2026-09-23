@@ -1,4 +1,4 @@
-#1
+#6
 Atras do portao, voce encontra uma sala de manutencao com mapas subterraneos da Fortaleza de Auren.
 
 Os documentos explicam que o Farol de Ambar e alimentado pela Camara da Primeira Chama. A energia mantem os selos que impedem as criaturas do norte de atravessar as montanhas.
@@ -7,9 +7,9 @@ Uma anotacao de seu pai esta escrita na margem:
 
 "Vaelthar nao deseja apenas destruir a Ordem. Ele quer provar que todo poder deve pertencer a uma unica pessoa. A chama e a chave."
 
-Sobre a mesa, ha uma pocao e uma chave marcada com o simbolo dos mineradores.
+Sobre a mesa, ha uma dardo e uma chave marcada com o simbolo dos mineradores.
 
-I: Pocao de vigor;c;1;0;3
+I: Dardo Arcano;c;1;0;3
 I: Chave dos mineradores;c;0;0;0
 #7: Entrar nas minas subterraneas
 #20: Explorar os alojamentos abandonados dos mineiros

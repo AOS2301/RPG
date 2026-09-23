@@ -1,4 +1,4 @@
-# Arquivos gerados pela compilacao (ver Makefile)
+# Arquivos gerados pela compilacao
 *.o
 *.exe
 *.out

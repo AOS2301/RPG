@@ -7,7 +7,7 @@
 using namespace std;
 
 // Le um arquivo de cena (cenes/N.txt) e guarda o conteudo em memoria.
-// Serve tanto para cenas de narrativa quanto para cenas de monstro.
+// Serve para os tres tipos de cena: narrativa, monstro e teste de sorte.
 class Cena
 {
 public:
@@ -46,6 +46,8 @@ public:
     int getDificuldadeSorte();
     int getDanoFalhaSorte();
 
+    void limpar();
+
 private:
     bool monstro;
     bool testeSorte;
@@ -65,8 +67,6 @@ private:
 
     int dificuldadeSorte;
     int danoFalhaSorte;
-
-    void limpar();
 };
 
 #endif // CENA_H

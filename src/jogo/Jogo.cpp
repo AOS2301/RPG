@@ -1,31 +1,10 @@
 #include "../../include/jogo/Jogo.h"
+#include "../../include/util/Texto.h"
 #include <iostream>
 #include <fstream>
-#include <cstdlib>
+#include <cstdlib> // exit()
 #include <cctype>
 #include <vector>
-
-// Quebra "Adaga de prata;w;1;1;1" em {"Adaga de prata","w","1","1","1"}.
-static vector<string> dividir(string texto, char separador)
-{
-    vector<string> partes;
-    string atual = "";
-
-    for (size_t i = 0; i < texto.size(); i++)
-    {
-        if (texto[i] == separador)
-        {
-            partes.push_back(atual);
-            atual = "";
-        }
-        else
-        {
-            atual += texto[i];
-        }
-    }
-    partes.push_back(atual);
-    return partes;
-}
 
 Jogo::Jogo()
 {
@@ -36,6 +15,63 @@ Jogo::Jogo()
 Jogo::~Jogo()
 {
     delete jogador;
+}
+
+// Começo do jogo: tela de abertura + menu principal (novo jogo, carregar, creditos, sair).
+void Jogo::iniciar()
+{
+    bool sair = false;
+
+    while (!sair)
+    {
+        exibirArquivo("telas/abertura.txt");
+        cout << "> ";
+        int opcao = lerInteiro();
+        cout << endl;
+
+        if (opcao == 1)
+        {
+            criarPersonagem();
+            jogar();
+        }
+        else if (opcao == 2)
+        {
+            cout << "Nome do personagem salvo: ";
+            string nomeSalvo;
+            getline(cin, nomeSalvo);
+
+            if (carregarJogo(aparar(nomeSalvo)))
+            {
+                cout << endl
+                     << "Jogo carregado com sucesso!" << endl
+                     << endl;
+                mostrarFicha();
+                jogar(false); // continua da cena salva, sem reiniciar o progresso
+            }
+            else
+            {
+                cout << endl
+                     << "Nao foi possivel carregar: nao ha jogo salvo com esse nome," << endl
+                     << "ou o save eh de uma versao antiga do jogo." << endl
+                     << endl;
+            }
+        }
+        else if (opcao == 3)
+        {
+            mostrarCreditos();
+        }
+        else if (opcao == 4)
+        {
+            sair = true;
+        }
+        else
+        {
+            cout << "Opcao invalida." << endl
+                 << endl;
+        }
+    }
+
+    cout << "Ate a proxima aventura!" << endl;
 }
 
 // ------------------------------------------------------------------
@@ -77,6 +113,7 @@ int Jogo::lerInteiro()
         exit(0);
     }
 
+    linha = aparar(linha);
     if (linha.empty() || linha.size() > 6)
     {
         return -1;
@@ -109,12 +146,13 @@ void Jogo::criarPersonagem()
     cout << "Nome do personagem: ";
     string nome;
     getline(cin, nome);
+    nome = aparar(nome);
     if (nome.empty())
     {
         nome = "Aventureiro";
     }
 
-    int habilidadeExtra, energiaExtra, sorteExtra, pontosExtras, pontosSobrando;
+    int habilidadeExtra, energiaExtra, sorteExtra;
 
     while (true)
     {
@@ -125,43 +163,51 @@ void Jogo::criarPersonagem()
         cout << "Pontos extras em SORTE (0-6): ";
         sorteExtra = lerInteiro();
 
-        pontosExtras = habilidadeExtra + energiaExtra + sorteExtra;
+        int soma = habilidadeExtra + energiaExtra + sorteExtra;
+
         if (habilidadeExtra < 0 || habilidadeExtra > 6 ||
             energiaExtra < 0 || energiaExtra > 12 ||
-            sorteExtra < 0 || sorteExtra > 6){
+            sorteExtra < 0 || sorteExtra > 6)
+        {
             cout << endl
                  << "Valor fora dos limites. Tente de novo." << endl
                  << endl;
-        } else if (pontosExtras > 12) {
+        }
+        else if (soma > 12)
+        {
             cout << endl
-                 << "A soma dos pontos extras ficou maior que 12: (soma = "
-                 << pontosExtras << "). Tente de novo." << endl
+                 << "A soma dos pontos extras ficou maior que 12 (soma = "
+                 << soma << "). Tente de novo." << endl
                  << endl;
-        } else if (pontosExtras != 12)  {
-            cout << endl
-                 << "A soma dos pontos extras ficou em "
-                 << pontosExtras << ". Abra o Menu caso queira ajustar seus pontos." << endl
-                 << endl;
-                 pontosSobrando = 12 - pontosExtras;
-                 break;
-        } else {
+        }
+        else
+        {
+            if (soma < 12)
+            {
+                cout << endl
+                     << "A soma dos pontos extras ficou em " << soma
+                     << ". Os pontos restantes ficam guardados para distribuir depois, pela ficha do personagem." << endl
+                     << endl;
+            }
             break;
         }
     }
 
+    // Pontos extras que nao foram usados na criacao ficam guardados como
+    // pontos de evolucao, para serem distribuidos depois pela ficha.
+    int pontosRestantes = 12 - (habilidadeExtra + energiaExtra + sorteExtra);
+
     // Se ja havia um personagem (novo jogo depois de outro), libera o antigo.
     delete jogador;
     jogador = new Jogador(nome, 6 + habilidadeExtra, 12 + energiaExtra, 6 + sorteExtra);
-    if(pontosSobrando > 0) {
-        jogador->setPontosEvolucao(pontosSobrando);
-    }
+    jogador->setPontosEvolucao(pontosRestantes);
 
     cout << endl;
     mostrarFicha();
 }
 
-// Ficha do personagem (tela de inventario): atributos, arma equipada e
-// os demais itens guardados no Inventario.
+// Ficha do personagem (tela de inventario): atributos, equipamentos e
+// todos os itens guardados no Inventario.
 void Jogo::mostrarFicha()
 {
     Inventario &inv = jogador->getInventario();
@@ -173,52 +219,73 @@ void Jogo::mostrarFicha()
     cout << "Habilidade: " << jogador->getHabilidade() << endl;
     cout << "Energia: " << jogador->getEnergia() << "/" << jogador->getEnergiaMaxima() << endl;
     cout << "Sorte: " << jogador->getSorte() << endl;
-    cout << "Provisoes: " << jogador->getProvisoes() << endl;
-    cout << "Ouro: " << jogador->getOuro() << endl;
+    cout << "Provisoes: " << inv.getProvisoes() << endl;
+    cout << "Ouro: " << inv.getOuro() << endl;
 
     Arma *arma = inv.getArmaEquipada();
     if (arma != nullptr)
     {
-        cout << "Arma: " << arma->imprimeInfo() << endl;
+        cout << "Arma equipada: " << arma->imprimeInfo() << endl;
     }
     else
     {
-        cout << "Arma: nenhuma" << endl;
+        cout << "Arma equipada: nenhuma" << endl;
     }
 
-    // Outras armas guardadas, mas nao equipadas.
-    bool temOutrasArmas = false;
+    Armadura *armadura = inv.getArmaduraEquipada();
+    if (armadura != nullptr)
+    {
+        cout << "Armadura equipada: " << armadura->imprimeInfo() << endl;
+    }
+    else
+    {
+        cout << "Armadura equipada: nenhuma" << endl;
+    }
+
+    // Armas e armaduras guardadas, mas nao equipadas.
+    bool temMochila = false;
     for (int i = 0; i < inv.getQuantidadeArmas(); i++)
     {
         if (inv.getArma(i) != arma)
         {
-            if (!temOutrasArmas)
+            if (!temMochila)
             {
                 cout << "Mochila:" << endl;
-                temOutrasArmas = true;
+                temMochila = true;
             }
             cout << " - " << inv.getArma(i)->imprimeInfo() << endl;
         }
     }
+    for (int i = 0; i < inv.getQuantidadeArmaduras(); i++)
+    {
+        if (inv.getArmadura(i) != armadura)
+        {
+            if (!temMochila)
+            {
+                cout << "Mochila:" << endl;
+                temMochila = true;
+            }
+            cout << " - " << inv.getArmadura(i)->imprimeInfo() << endl;
+        }
+    }
 
-    // Itens magicos (itens comuns com combate=1: usaveis em "Usar Magia" na batalha).
+    // Itens magicos: usados na opcao "Usar Magia" da batalha.
     if (inv.getQuantidadeItensMagicos() > 0)
     {
         cout << "Magias:" << endl;
         for (int i = 0; i < inv.getQuantidadeItensMagicos(); i++)
         {
-            Arma *m = inv.getItemMagico(i);
-            cout << " - " << m->getNome() << " (dano magico: " << (2 + m->getDano()) << ")" << endl;
+            cout << " - " << inv.getItemMagico(i)->imprimeInfo() << endl;
         }
     }
 
-    // Armaduras e itens comuns sem efeito em combate.
-    if (inv.getQuantidadeOutrosItens() > 0)
+    // Itens comuns, sem efeito em combate.
+    if (inv.getQuantidadeItensComuns() > 0)
     {
         cout << "Itens:" << endl;
-        for (int i = 0; i < inv.getQuantidadeOutrosItens(); i++)
+        for (int i = 0; i < inv.getQuantidadeItensComuns(); i++)
         {
-            cout << " - " << inv.getOutroItem(i) << endl;
+            cout << " - " << inv.getItemComum(i)->imprimeInfo() << endl;
         }
     }
 
@@ -239,6 +306,7 @@ void Jogo::menuFicha()
         mostrarFicha();
         cout << " 1 - Comer uma provisao (+4 de energia)" << endl;
         cout << " 2 - Distribuir pontos de evolucao" << endl;
+        cout << " 3 - Trocar arma ou armadura equipada" << endl;
         cout << " 0 - Voltar para a historia" << endl;
         cout << "> ";
 
@@ -266,6 +334,10 @@ void Jogo::menuFicha()
                 cout << "Nao ha pontos para distribuir." << endl;
             }
         }
+        else if (escolha == 3)
+        {
+            trocarEquipamento();
+        }
         else if (escolha == 0)
         {
             voltar = true;
@@ -273,6 +345,78 @@ void Jogo::menuFicha()
         else
         {
             cout << "Opcao invalida." << endl;
+        }
+    }
+}
+
+// Enunciado: "Quando quiser o jogador pode acessar a tela de inventario e
+// modificar o que o personagem esta equipado."
+void Jogo::trocarEquipamento()
+{
+    Inventario &inv = jogador->getInventario();
+
+    cout << " 1 - Trocar arma" << endl;
+    cout << " 2 - Trocar armadura" << endl;
+    cout << " 0 - Voltar" << endl;
+    cout << "> ";
+    int tipo = lerInteiro();
+
+    if (tipo == 1)
+    {
+        if (inv.getQuantidadeArmas() == 0)
+        {
+            cout << "Voce nao tem nenhuma arma." << endl;
+            return;
+        }
+        for (int i = 0; i < inv.getQuantidadeArmas(); i++)
+        {
+            cout << " " << (i + 1) << " - " << inv.getArma(i)->imprimeInfo();
+            if (inv.getArma(i) == inv.getArmaEquipada())
+            {
+                cout << " [equipada]";
+            }
+            cout << endl;
+        }
+        cout << " 0 - Cancelar" << endl;
+        cout << "> ";
+        int escolha = lerInteiro();
+
+        if (escolha >= 1 && inv.equiparArma(escolha - 1))
+        {
+            cout << inv.getArmaEquipada()->getNome() << " equipada." << endl;
+        }
+        else
+        {
+            cout << "Nada foi alterado." << endl;
+        }
+    }
+    else if (tipo == 2)
+    {
+        if (inv.getQuantidadeArmaduras() == 0)
+        {
+            cout << "Voce nao tem nenhuma armadura." << endl;
+            return;
+        }
+        for (int i = 0; i < inv.getQuantidadeArmaduras(); i++)
+        {
+            cout << " " << (i + 1) << " - " << inv.getArmadura(i)->imprimeInfo();
+            if (inv.getArmadura(i) == inv.getArmaduraEquipada())
+            {
+                cout << " [equipada]";
+            }
+            cout << endl;
+        }
+        cout << " 0 - Cancelar" << endl;
+        cout << "> ";
+        int escolha = lerInteiro();
+
+        if (escolha >= 1 && inv.equiparArmadura(escolha - 1))
+        {
+            cout << inv.getArmaduraEquipada()->getNome() << " equipada." << endl;
+        }
+        else
+        {
+            cout << "Nada foi alterado." << endl;
         }
     }
 }
@@ -329,65 +473,6 @@ void Jogo::distribuirPontos()
 }
 
 // ------------------------------------------------------------------
-// Menu principal
-// ------------------------------------------------------------------
-
-void Jogo::iniciar()
-{
-    bool sair = false;
-
-    while (!sair)
-    {
-        exibirArquivo("telas/abertura.txt");
-        cout << "> ";
-        int opcao = lerInteiro();
-        cout << endl;
-
-        if (opcao == 1)
-        {
-            criarPersonagem();
-            jogar();
-        }
-        else if (opcao == 2)
-        {
-            cout << "Nome do personagem salvo: ";
-            string nomeSalvo;
-            getline(cin, nomeSalvo);
-
-            if (carregarJogo(nomeSalvo))
-            {
-                cout << endl
-                     << "Jogo carregado com sucesso!" << endl
-                     << endl;
-                mostrarFicha();
-                jogar(false); // continua da cena salva, sem reiniciar o progresso
-            }
-            else
-            {
-                cout << endl
-                     << "Nao ha nenhum jogo salvo com esse nome." << endl
-                     << endl;
-            }
-        }
-        else if (opcao == 3)
-        {
-            mostrarCreditos();
-        }
-        else if (opcao == 4)
-        {
-            sair = true;
-        }
-        else
-        {
-            cout << "Opcao invalida." << endl
-                 << endl;
-        }
-    }
-
-    cout << "Ate a proxima aventura!" << endl;
-}
-
-// ------------------------------------------------------------------
 // Controle do que ja aconteceu (percorre o vector com um laco simples)
 // ------------------------------------------------------------------
 
@@ -419,6 +504,7 @@ bool Jogo::jaDerrotou(int numeroCena)
 // Salvar/Carregar: um arquivo de texto por personagem, data/<nome>.txt
 // (mesma ideia dos arquivos de cena: um dado por linha). Formato:
 //
+// versao do save (VERSAO_SAVE)
 // nome
 // habilidade
 // energia
@@ -433,15 +519,6 @@ bool Jogo::jaDerrotou(int numeroCena)
 // quantidade de monstros derrotados
 // monstros derrotados separados por ';' (linha vazia se nao houver nenhum)
 // -- a partir daqui, quem escreve/le eh o Inventario (Inventario::salvar/carregar) --
-// ouro
-// provisoes
-// quantidade de armas
-// uma linha por arma -> nome;combate;fa;dano
-// indice da arma equipada (-1 se nenhuma)
-// quantidade de itens magicos
-// uma linha por item magico -> nome;combate;fa;dano
-// quantidade de outros itens
-// uma linha por item
 // ------------------------------------------------------------------
 
 // Junta um vector<int> numa linha "1;2;3" (usada so para salvar).
@@ -459,6 +536,32 @@ static string juntar(const vector<int> &valores)
     return linha;
 }
 
+// Faz o caminho contrario do juntar: "1;2;3" -> {1,2,3}.
+// Retorna false se algum numero for invalido ou a quantidade nao bater.
+static bool separarNumeros(string linha, int quantidadeEsperada, vector<int> &destino)
+{
+    destino.clear();
+    linha = aparar(linha);
+    if (quantidadeEsperada == 0)
+    {
+        return linha.empty();
+    }
+
+    vector<string> partes = dividir(linha, ';');
+    try
+    {
+        for (size_t i = 0; i < partes.size(); i++)
+        {
+            destino.push_back(stoi(partes[i]));
+        }
+    }
+    catch (...)
+    {
+        return false;
+    }
+    return static_cast<int>(destino.size()) == quantidadeEsperada;
+}
+
 string Jogo::caminhoSave(string nome)
 {
     return "data/" + nome + ".txt";
@@ -471,10 +574,12 @@ void Jogo::salvarJogo()
         return; // nao ha partida em andamento para salvar
     }
 
+    // ofstream apaga o conteudo antigo ao abrir: um novo personagem com o
+    // mesmo nome sobrescreve o save anterior.
     ofstream arquivo(caminhoSave(jogador->getNome()));
     if (arquivo.fail())
     {
-        cout << "Aviso: nao foi possivel salvar o jogo." << endl;
+        cout << "Aviso: nao foi possivel salvar o jogo (a pasta data/ existe?)." << endl;
         return;
     }
 
@@ -495,35 +600,14 @@ void Jogo::salvarJogo()
     arquivo << monstrosDerrotados.size() << "\n";
     arquivo << juntar(monstrosDerrotados) << "\n";
 
-    // Ouro, provisoes, armas e itens: quem sabe salvar isso eh o Inventario.
+    // Ouro, provisoes e itens: quem sabe salvar isso eh o Inventario.
     jogador->getInventario().salvar(arquivo);
 
     arquivo.close();
 }
 
-// Le uma linha do arquivo de save e converte para inteiro.
-// "ok" vira false se a linha nao existir ou nao for um numero valido.
-static int lerLinhaInteira(ifstream &arquivo, bool &ok)
-{
-    string linha;
-    if (!ok || !getline(arquivo, linha))
-    {
-        ok = false;
-        return 0;
-    }
-    try
-    {
-        return stoi(linha);
-    }
-    catch (...)
-    {
-        ok = false; // linha nao era um numero (arquivo corrompido)
-        return 0;
-    }
-}
-
 // Restaura a partida salva em data/<nome>.txt. Retorna false se nao existe
-// save com esse nome ou se o arquivo estiver corrompido/incompleto.
+// save com esse nome, se for de outra versao ou se estiver corrompido.
 bool Jogo::carregarJogo(string nome)
 {
     ifstream arquivo(caminhoSave(nome));
@@ -537,36 +621,45 @@ bool Jogo::carregarJogo(string nome)
     {
         return false;
     }
+    nomeSalvo = aparar(nomeSalvo);
 
-    bool ok = true;
-    int habilidade = lerLinhaInteira(arquivo, ok);
-    int energia = lerLinhaInteira(arquivo, ok);
-    int energiaMaxima = lerLinhaInteira(arquivo, ok);
-    int sorte = lerLinhaInteira(arquivo, ok);
-    int nivel = lerLinhaInteira(arquivo, ok);
-    int experiencia = lerLinhaInteira(arquivo, ok);
-    int pontosEvolucao = lerLinhaInteira(arquivo, ok);
+    int habilidade, energia, energiaMaxima, sorte, nivel, experiencia, pontosEvolucao;
+    int cena, quantidadeVisitadas, quantidadeDerrotados;
+    string linhaVisitadas, linhaDerrotados;
 
-    int cena = lerLinhaInteira(arquivo, ok);
-    int quantidadeVisitadas = lerLinhaInteira(arquivo, ok);
-
-    string linhaVisitadas;
-    if (!getline(arquivo, linhaVisitadas))
-    {
-        ok = false;
-    }
-
-    int quantidadeDerrotados = lerLinhaInteira(arquivo, ok);
-
-    string linhaDerrotados;
-    if (!getline(arquivo, linhaDerrotados))
-    {
-        ok = false;
-    }
-
+    bool ok = lerLinhaInteira(arquivo, habilidade) &&
+              lerLinhaInteira(arquivo, energia) &&
+              lerLinhaInteira(arquivo, energiaMaxima) &&
+              lerLinhaInteira(arquivo, sorte) &&
+              lerLinhaInteira(arquivo, nivel) &&
+              lerLinhaInteira(arquivo, experiencia) &&
+              lerLinhaInteira(arquivo, pontosEvolucao) &&
+              lerLinhaInteira(arquivo, cena) &&
+              lerLinhaInteira(arquivo, quantidadeVisitadas) &&
+              getline(arquivo, linhaVisitadas) &&
+              lerLinhaInteira(arquivo, quantidadeDerrotados) &&
+              getline(arquivo, linhaDerrotados);
     if (!ok)
     {
         return false; // arquivo de save incompleto ou corrompido
+    }
+
+    vector<int> visitadas;
+    vector<int> derrotados;
+    if (!separarNumeros(linhaVisitadas, quantidadeVisitadas, visitadas) ||
+        !separarNumeros(linhaDerrotados, quantidadeDerrotados, derrotados))
+    {
+        return false;
+    }
+
+    // Trava de seguranca: pontosEvolucao nunca deveria ser negativo nem um
+    // valor absurdamente alto (o maximo teorico e 12 da criacao + 2 por
+    // nivel ja alcancado). Um valor fora disso indica um save corrompido,
+    // entao zeramos em vez de aceitar.
+    int limitePontosEvolucao = 12 + (nivel * 2);
+    if (pontosEvolucao < 0 || pontosEvolucao > limitePontosEvolucao)
+    {
+        pontosEvolucao = 0;
     }
 
     // So depois de ler os dados do personagem eh que descartamos o jogador atual.
@@ -577,7 +670,7 @@ bool Jogo::carregarJogo(string nome)
     jogador->setExperiencia(experiencia);
     jogador->setPontosEvolucao(pontosEvolucao);
 
-    // Ouro, provisoes, armas e itens: quem sabe se carregar isso eh o Inventario.
+    // Ouro, provisoes e itens: quem sabe carregar isso eh o Inventario.
     if (!jogador->getInventario().carregar(arquivo))
     {
         delete jogador;
@@ -588,27 +681,8 @@ bool Jogo::carregarJogo(string nome)
     arquivo.close();
 
     cenaAtual = cena;
-
-    cenasVisitadas.clear();
-    if (quantidadeVisitadas > 0 && !linhaVisitadas.empty())
-    {
-        vector<string> partes = dividir(linhaVisitadas, ';');
-        for (size_t i = 0; i < partes.size(); i++)
-        {
-            cenasVisitadas.push_back(stoi(partes[i]));
-        }
-    }
-
-    monstrosDerrotados.clear();
-    if (quantidadeDerrotados > 0 && !linhaDerrotados.empty())
-    {
-        vector<string> partes = dividir(linhaDerrotados, ';');
-        for (size_t i = 0; i < partes.size(); i++)
-        {
-            monstrosDerrotados.push_back(stoi(partes[i]));
-        }
-    }
-
+    cenasVisitadas = visitadas;
+    monstrosDerrotados = derrotados;
     return true;
 }
 
@@ -618,8 +692,7 @@ bool Jogo::carregarJogo(string nome)
 
 void Jogo::jogar(bool novaPartida)
 {
-    if (novaPartida)
-    {
+    if (novaPartida){
         cenaAtual = 1;
         cenasVisitadas.clear();
         monstrosDerrotados.clear();
@@ -631,16 +704,14 @@ void Jogo::jogar(bool novaPartida)
         Cena cena;
         string caminho = "cenes/" + to_string(cenaAtual) + ".txt";
 
-        if (!cena.carregar(caminho))
-        {
+        if (!cena.carregar(caminho)){
             cout << "Nao foi possivel abrir " << caminho << endl;
             return;
         }
 
         // Itens so sao entregues na primeira visita (evita pegar tudo de novo ao voltar).
         bool primeiraVez = !foiVisitada(cenaAtual);
-        if (primeiraVez)
-        {
+        if (primeiraVez){
             cenasVisitadas.push_back(cenaAtual);
         }
 
@@ -662,23 +733,28 @@ void Jogo::jogar(bool novaPartida)
         {
             executarCenaNormal(cena, fim, primeiraVez);
         }
+
+        limparTerminal();
     }
 }
 
+// Teste de Sorte fora de combate (ex: atravessar uma ponte velha ou passar
+// por um espaco apertado). A regra fica em Personagem::testarSorteContra;
+// aqui so mostramos o resultado e decidimos a proxima cena.
 void Jogo::executarCenaTesteSorte(Cena &cena)
 {
     cout << cena.getTexto() << endl;
 
-    int dado = (rand() % 6) + 1;
-    int total = dado + jogador->getSorte();
+    int sorteAntes = jogador->getSorte();
+    int dado;
+    bool passou = jogador->testarSorteContra(cena.getDificuldadeSorte(), dado);
 
     cout << "Testando a Sorte..." << endl;
-    cout << "Dado (1-6): " << dado << " + Sorte (" << jogador->getSorte() << ") = " << total
+    cout << "Dado (1-6): " << dado << " + Sorte (" << sorteAntes << ") = " << (dado + sorteAntes)
          << " (precisa de mais que " << cena.getDificuldadeSorte() << ")" << endl;
+    cout << "Sua Sorte agora eh " << jogador->getSorte() << "." << endl;
 
-    jogador->decrementarSorte(); // usar a Sorte gasta 1 ponto, com sucesso ou nao
-
-    if (total > cena.getDificuldadeSorte())
+    if (passou)
     {
         cout << "Sucesso! Voce consegue passar em seguranca." << endl;
         cenaAtual = cena.getDestinoSucesso();
@@ -691,8 +767,8 @@ void Jogo::executarCenaTesteSorte(Cena &cena)
 
         if (!jogador->estaVivo())
         {
-            // Decisao igual a derrota em combate: nao morre so pela queda.
-            jogador->setEnergia((jogador->getEnergiaMaxima() + 1) / 2);
+            cout << "Voce quase nao sobrevive... mas a historia continua." << endl;
+            jogador->recuperarAposDerrota();
         }
 
         cenaAtual = cena.getDestinoDerrota();
@@ -725,7 +801,7 @@ void Jogo::executarCenaNormal(Cena &cena, bool &fim, bool primeiraVez)
     {
         cout << " " << (i + 1) << " - " << cena.getTextoOpcao(i) << endl;
     }
-    cout << " 0 - Ficha do personagem (provisoes e evolucao)" << endl;
+    cout << " 0 - Ficha do personagem (inventario, provisoes e evolucao)" << endl;
 
     while (true)
     {
@@ -740,7 +816,7 @@ void Jogo::executarCenaNormal(Cena &cena, bool &fim, bool primeiraVez)
             {
                 cout << " " << (i + 1) << " - " << cena.getTextoOpcao(i) << endl;
             }
-            cout << " 0 - Ficha do personagem (provisoes e evolucao)" << endl;
+            cout << " 0 - Ficha do personagem (inventario, provisoes e evolucao)" << endl;
         }
         else if (escolha >= 1 && escolha <= cena.getQuantidadeOpcoes())
         {
@@ -779,15 +855,16 @@ void Jogo::executarCenaMonstro(Cena &cena)
         cout << "Voce ganhou " << experiencia << " pontos de experiencia." << endl;
         int niveisGanhos = jogador->ganharExperiencia(experiencia);
 
-        // Recompensas do monstro (campos T e P do arquivo da cena).
+        // Recompensas do monstro (campos T, P e I do arquivo da cena).
+        Inventario &inv = jogador->getInventario();
         if (cena.getOuro() > 0)
         {
-            jogador->adicionarOuro(cena.getOuro());
+            inv.adicionarOuro(cena.getOuro());
             cout << "Voce encontrou " << cena.getOuro() << " moedas de ouro." << endl;
         }
         if (cena.getProvisoes() > 0)
         {
-            jogador->adicionarProvisoes(cena.getProvisoes());
+            inv.adicionarProvisoes(cena.getProvisoes());
             cout << "Voce encontrou " << cena.getProvisoes() << " provisao(oes)." << endl;
         }
 
@@ -812,14 +889,15 @@ void Jogo::executarCenaMonstro(Cena &cena)
         {
             cout << endl
                  << "Voce foi derrotado... mas a historia continua." << endl;
-            // Decisao provisoria: volta com metade da energia maxima.
-            jogador->setEnergia((jogador->getEnergiaMaxima() + 1) / 2);
+            jogador->recuperarAposDerrota();
         }
         cenaAtual = cena.getDestinoDerrota();
     }
 }
 
-// Retorna true se o jogador derrotou o monstro; false se perdeu ou fugiu.
+// Tela de batalha. Retorna true se o jogador derrotou o monstro; false se
+// perdeu ou fugiu. As regras ficam no Personagem/Jogador; aqui so o menu
+// e as mensagens.
 bool Jogo::batalha(Cena &cena)
 {
     Monstro monstro(cena.getNomeMonstro(), cena.getHabilidadeMonstro(),
@@ -829,6 +907,8 @@ bool Jogo::batalha(Cena &cena)
 
     while (jogador->estaVivo() && monstro.estaVivo())
     {
+        bool temMagia = jogador->getInventario().getQuantidadeItensMagicos() > 0;
+
         cout << endl;
         cout << jogador->getNome() << " - Energia: " << jogador->getEnergia()
              << "/" << jogador->getEnergiaMaxima() << " | Sorte: " << jogador->getSorte() << endl;
@@ -836,7 +916,7 @@ bool Jogo::batalha(Cena &cena)
         cout << " 1 - Atacar" << endl;
         cout << " 2 - Fugir" << endl;
         cout << " 3 - Atacar e testar a Sorte" << endl;
-        if (jogador->getInventario().getQuantidadeItensMagicos() > 0)
+        if (temMagia)
         {
             cout << " 4 - Usar Magia" << endl;
         }
@@ -846,19 +926,14 @@ bool Jogo::batalha(Cena &cena)
 
         if (escolha == 1 || escolha == 3)
         {
-            int energiaJogadorAntes = jogador->getEnergia();
-            int energiaMonstroAntes = monstro.getEnergia();
+            // Uma rodada: os dois calculam a FA e quem vencer fere o outro.
+            int resultado = jogador->disputarRodada(&monstro);
 
-            jogador->atacar(&monstro);
-
-            bool acertouMonstro = monstro.getEnergia() < energiaMonstroAntes;
-            bool foiAcertado = jogador->getEnergia() < energiaJogadorAntes;
-
-            if (acertouMonstro)
+            if (resultado == 1)
             {
                 cout << "Voce acertou o golpe!" << endl;
             }
-            else if (foiAcertado)
+            else if (resultado == -1)
             {
                 cout << monstro.getNome() << " acertou voce!" << endl;
             }
@@ -874,32 +949,29 @@ bool Jogo::batalha(Cena &cena)
                 {
                     cout << "Voce nao tem mais Sorte para testar." << endl;
                 }
-                else if (!acertouMonstro && !foiAcertado)
+                else if (resultado == 0)
                 {
                     cout << "Ninguem foi ferido, entao a Sorte nao foi usada." << endl;
                 }
                 else
                 {
-                    bool sucesso = jogador->testarSorte(); // gasta 1 ponto de Sorte
+                    bool venceuRodada = (resultado == 1);
+                    bool sucesso = jogador->usarSorteEmCombate(&monstro, venceuRodada);
 
-                    if (acertouMonstro && sucesso)
+                    if (venceuRodada && sucesso)
                     {
-                        monstro.receberDano(2);
                         cout << "Sorte! Seu golpe foi mais forte (+2 de dano)." << endl;
                     }
-                    else if (acertouMonstro)
+                    else if (venceuRodada)
                     {
-                        monstro.recuperarEnergia(1);
                         cout << "Azar! Seu golpe perdeu forca (-1 de dano)." << endl;
                     }
                     else if (sucesso)
                     {
-                        jogador->recuperarEnergia(1);
                         cout << "Sorte! Voce amorteceu o golpe (-1 de dano)." << endl;
                     }
                     else
                     {
-                        jogador->receberDano(1);
                         cout << "Azar! O golpe foi pior do que parecia (+1 de dano)." << endl;
                     }
                 }
@@ -910,7 +982,7 @@ bool Jogo::batalha(Cena &cena)
             cout << "Voce fugiu da batalha!" << endl;
             return false; // fugir conta como "monstro nao derrotado"
         }
-        else if (escolha == 4 && jogador->getInventario().getQuantidadeItensMagicos() > 0)
+        else if (escolha == 4 && temMagia)
         {
             usarMagia(monstro);
         }
@@ -923,6 +995,8 @@ bool Jogo::batalha(Cena &cena)
     return jogador->estaVivo();
 }
 
+// Submenu de "Usar Magia": o jogador escolhe um item magico. A regra
+// (consumir o item e causar o dano) fica em Jogador::usarItemMagico.
 void Jogo::usarMagia(Monstro &monstro)
 {
     Inventario &inv = jogador->getInventario();
@@ -931,9 +1005,7 @@ void Jogo::usarMagia(Monstro &monstro)
     cout << "Qual item magico usar?" << endl;
     for (int i = 0; i < quantidade; i++)
     {
-        Arma *item = inv.getItemMagico(i);
-        cout << " " << (i + 1) << " - " << item->getNome()
-             << " (dano magico: " << (2 + item->getDano()) << ")" << endl;
+        cout << " " << (i + 1) << " - " << inv.getItemMagico(i)->imprimeInfo() << endl;
     }
     cout << " 0 - Cancelar" << endl;
     cout << "> ";
@@ -945,35 +1017,46 @@ void Jogo::usarMagia(Monstro &monstro)
         return;
     }
 
-    Arma *item = inv.consumirItemMagico(escolha - 1);
-    int dano = 2 + item->getDano(); // 2 = dano base de um acerto (mesma base do combate fisico)
+    string nomeItem = inv.getItemMagico(escolha - 1)->getNome(); // antes de ser consumido
+    int dano = jogador->usarItemMagico(escolha - 1, &monstro);
 
-    cout << "Voce usa " << item->getNome() << "! Um efeito magico acerta "
-         << monstro.getNome() << " em cheio (a magia nunca erra)." << endl;
-    monstro.receberDano(dano);
-
-    delete item; // uso unico: o item foi consumido
+    cout << "Voce usa " << nomeItem << "! Um efeito magico acerta "
+         << monstro.getNome() << " em cheio e causa " << dano
+         << " de dano (a magia nunca erra)." << endl;
 }
 
-// Recebe uma linha de item "nome;tipo;combate;FA;dano" e repassa para o
-// Inventario do jogador (quem decide o que fazer com cada tipo de item).
+// Entrega ao jogador um item vindo de uma cena ("nome;tipo;combate;FA;dano").
+// Quem entende a linha e decide onde guardar eh o Inventario; aqui so avisamos.
 void Jogo::receberItem(string linha)
 {
-    vector<string> campos = dividir(linha, ';');
-    if (campos.size() < 5)
-    {
-        return; // linha mal formatada: ignora
-    }
-    string nome = campos[0];
+    Inventario &inv = jogador->getInventario();
+    Arma *armaAntes = inv.getArmaEquipada();
+    Armadura *armaduraAntes = inv.getArmaduraEquipada();
 
-    Arma *armaAntes = jogador->getArmaEquipada();
-    jogador->getInventario().adicionarItem(linha);
-    Arma *armaDepois = jogador->getArmaEquipada();
+    Item *item = inv.adicionarItem(linha);
+    if (item == nullptr)
+    {
+        return; // linha de item mal formatada no arquivo da cena: ignora
+    }
 
     cout << endl
-         << "Voce obteve: " << nome << endl;
-    if (armaDepois != armaAntes && armaDepois != nullptr)
+         << "Voce obteve: " << item->getNome() << endl;
+
+    if (inv.getArmaEquipada() != armaAntes)
     {
-        cout << "(" << armaDepois->getNome() << " foi equipada)" << endl;
+        cout << "(" << inv.getArmaEquipada()->getNome() << " foi equipada)" << endl;
     }
+    if (inv.getArmaduraEquipada() != armaduraAntes)
+    {
+        cout << "(" << inv.getArmaduraEquipada()->getNome() << " foi equipada)" << endl;
+    }
+}
+
+void Jogo::limparTerminal()
+{
+#ifdef _WIN32
+    system("cls");
+#else 
+    system("clear");
+#endif 
 }

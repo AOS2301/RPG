@@ -9,8 +9,6 @@
 
 using namespace std;
 
-// Controla o fluxo do jogo: tela de abertura, criacao do personagem
-// e o loop que anda de cena em cena.
 class Jogo
 {
 public:
@@ -18,25 +16,26 @@ public:
     ~Jogo();
 
     void iniciar(); // tela de abertura + menu principal
-    
+
     // Telas e entrada
     void exibirArquivo(string caminho);
     int lerInteiro();
     void mostrarCreditos();
     void criarPersonagem();
     void mostrarFicha();
-    void menuFicha();          // ficha + comer provisao + distribuir pontos
-    void distribuirPontos();   // tela de evolucao do personagem
+    void menuFicha();         // ficha + comer provisao + evolucao + trocar equipamento
+    void distribuirPontos();  // tela de evolucao do personagem
+    void trocarEquipamento(); // escolhe a arma e a armadura equipadas
 
     // Loop da aventura
     // novaPartida=true zera o progresso (cena 1); false continua de onde o
     // jogo salvo (carregarJogo) deixou, sem mexer em cenaAtual/vetores.
     void jogar(bool novaPartida = true);
-    void executarCenaNormal(Cena& cena, bool& fim, bool primeiraVez);
-    void executarCenaMonstro(Cena& cena);
-    void executarCenaTesteSorte(Cena& cena); // teste de sorte fora de combate (ex: atravessar uma ponte)
-    bool batalha(Cena& cena);
-    void usarMagia(Monstro& monstro); // submenu de "Usar Magia" dentro da batalha
+    void executarCenaNormal(Cena &cena, bool &fim, bool primeiraVez);
+    void executarCenaMonstro(Cena &cena);
+    void executarCenaTesteSorte(Cena &cena); // teste de sorte fora de combate (ex: atravessar uma ponte)
+    bool batalha(Cena &cena);
+    void usarMagia(Monstro &monstro); // submenu de "Usar Magia" dentro da batalha
     void receberItem(string linha);
 
     // Controle do que ja aconteceu na aventura
@@ -48,10 +47,13 @@ public:
     // quebra permite manter mais de uma partida salva ao mesmo tempo.
     void salvarJogo();
     bool carregarJogo(string nome); // false se nao existe save com esse nome (ou arquivo invalido)
+
+    void limparTerminal();
+
 private:
     string caminhoSave(string nome); // monta "data/<nome>.txt"
 
-    Jogador* jogador;
+    Jogador *jogador;
     int cenaAtual;
     vector<int> cenasVisitadas;     // cenas que o jogador ja viu
     vector<int> monstrosDerrotados; // cenas de monstro ja vencidas
