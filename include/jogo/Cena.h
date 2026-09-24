@@ -40,9 +40,10 @@ public:
     int getDestinoDerrota();
 
     // Dados do teste de sorte (so fazem sentido se ehTesteDeSorte() for true).
-    // Uso da Sorte fora de combate, conforme o enunciado: rola-se 1d6 e soma
-    // com a Sorte do personagem; se o total for maior que a dificuldade, ele
-    // passa. Se nao, sofre o dano definido na propria cena.
+    // Uso da Sorte fora de combate, conforme o enunciado: sorteia-se um valor
+    // (1d10) e compara com a Sorte. A dificuldade da cena (D) soma no dado:
+    // passa se 1d10 + D <= Sorte. Se falhar, sofre o dano da cena (X).
+    // Esse teste nao gasta Sorte (so o de combate gasta).
     int getDificuldadeSorte();
     int getDanoFalhaSorte();
 

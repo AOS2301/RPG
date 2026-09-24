@@ -1,0 +1,8 @@
+s
+O corredor que leva ao topo da Fortaleza de Auren foi protegido pela propria Ordem. Placas de pressao marcadas com simbolos antigos cobrem o chao, e fendas nas paredes escondem laminas.
+
+Os mecanismos ainda funcionam. Voce avanca devagar, tentando adivinhar quais placas sao seguras.
+
+D: 3
+X: 5
+9;38

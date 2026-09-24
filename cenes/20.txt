@@ -5,9 +5,9 @@ Algo se move sob os colchoes rasgados. Ratos do tamanho de caes, com veios doura
 
 N: Ratos das minas
 M: S
-H: 5
-S: 5
-E: 6
+H: 8
+S: 6
+E: 10
 T: 10
 P: 1
 21;6

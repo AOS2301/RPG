@@ -3,6 +3,6 @@ O tunel de ventilacao e mais estreito do que parecia. A rocha aperta seus ombros
 
 A certa altura, o espaco fica tao apertado que voce precisa forcar a passagem, arriscando ficar preso ou se ferir nas bordas afiadas da pedra.
 
-D: 9
+D: 3
 X: 3
-22;22
+22;32

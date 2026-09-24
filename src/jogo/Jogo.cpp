@@ -734,6 +734,16 @@ void Jogo::jogar(bool novaPartida)
             executarCenaNormal(cena, fim, primeiraVez);
         }
 
+        // Pausa antes de limpar a tela: sem ela, o resultado de um teste de
+        // sorte (e de uma batalha, e o final da historia) era apagado antes
+        // de o jogador conseguir ler.
+        if (cena.ehMonstro() || cena.ehTesteDeSorte() || fim)
+        {
+            cout << endl
+                 << "Pressione ENTER para continuar...";
+            string descarte;
+            getline(cin, descarte);
+        }
         limparTerminal();
     }
 }
@@ -749,10 +759,11 @@ void Jogo::executarCenaTesteSorte(Cena &cena)
     int dado;
     bool passou = jogador->testarSorteContra(cena.getDificuldadeSorte(), dado);
 
-    cout << "Testando a Sorte..." << endl;
-    cout << "Dado (1-6): " << dado << " + Sorte (" << sorteAntes << ") = " << (dado + sorteAntes)
-         << " (precisa de mais que " << cena.getDificuldadeSorte() << ")" << endl;
-    cout << "Sua Sorte agora eh " << jogador->getSorte() << "." << endl;
+    int dificuldade = cena.getDificuldadeSorte();
+    cout << "*** TESTE DE SORTE ***" << endl;
+    cout << "Dado (1-10): " << dado << " + dificuldade " << dificuldade << " = " << (dado + dificuldade)
+         << " (precisa ser no maximo a sua Sorte: " << sorteAntes << ")" << endl;
+    cout << "(Este teste nao gasta Sorte.)" << endl;
 
     if (passou)
     {

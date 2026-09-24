@@ -5,6 +5,6 @@ Nao ha outro caminho visivel ate a fortaleza. Voce respira fundo e comeca a atra
 
 No meio do caminho, uma das pedras cede sob seus pes.
 
-D: 8
+D: 3
 X: 4
-3;3
+3;31

@@ -6,9 +6,9 @@ A batalha e implacavel. Cada golpe ecoa como o trovao nas pedras ancestrais.
 
 N: Vaelthar, o Rei da Ruina
 M: S
-H: 14
-S: 4
-E: 20
+H: 16
+S: 8
+E: 30
 T: 50
 P: 5
 18;19

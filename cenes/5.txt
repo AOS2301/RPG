@@ -16,7 +16,7 @@ N: Sentinela de Ferro
 M: S
 H: 9
 S: 8
-E: 14
+E: 16
 T: 80
 P: 1
 12;13

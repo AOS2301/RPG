@@ -90,7 +90,7 @@ bool Cena::carregar(string caminho)
         }
         else if (testeSorte && linha.substr(0, 2) == "D:")
         {
-            // Dificuldade do teste: 1d6 + Sorte precisa ser MAIOR que esse valor.
+            // Dificuldade do teste: soma no dado (passa se 1d10 + D <= Sorte).
             dificuldadeSorte = stoi(linha.substr(2));
         }
         else if (testeSorte && linha.substr(0, 2) == "X:")

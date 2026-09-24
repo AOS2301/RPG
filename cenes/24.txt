@@ -7,9 +7,9 @@ Um guardiao esquecido, preso entre a morte e o dever, ergue a espada ao perceber
 
 N: Guardiao esquecido
 M: S
-H: 9
-S: 7
-E: 12
+H: 14
+S: 9
+E: 16
 T: 40
 P: 1
 25;8

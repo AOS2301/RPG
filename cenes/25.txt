@@ -6,4 +6,4 @@ Gravada na lamina, uma frase: "Proteger e escolher lutar."
 Voce descansa por um instante, sente o peso do medalhao e decide subir ao encontro do que o espera no topo da fortaleza.
 
 I: Espada dos Guardioes;w;1;2;2
-#9: Subir ate o topo da Fortaleza de Auren
+#35: Subir ate o topo da Fortaleza de Auren

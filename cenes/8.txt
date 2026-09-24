@@ -11,4 +11,4 @@ Uma inscricao revela que a chama reage a vontade de quem a carrega. Voce a recol
 
 I: Chama Primordial;c;1;0;0
 #9: Subir ate o topo da Fortaleza de Auren
-#24: Descer a cripta dos guardioes antes de subir
+#33: Descer a cripta dos guardioes antes de subir

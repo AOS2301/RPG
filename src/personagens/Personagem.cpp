@@ -73,12 +73,15 @@ bool Personagem::testarSorte()
     return sucesso;
 }
 
+// Teste de sorte das cenas (ponte, tunel, armadilhas...). Mesma ideia do
+// enunciado: um valor aleatorio comparado com a Sorte. A dificuldade da
+// cena soma no dado, e quanto menor a Sorte, mais facil falhar.
+// Diferente do combate, este teste NAO gasta Sorte: ela so pesa no resultado.
+// Com dificuldade 3, quem tem Sorte 9 passa em 60% das vezes.
 bool Personagem::testarSorteContra(int dificuldade, int &dado)
 {
-    dado = rolarDado(6);
-    bool sucesso = (dado + sorte > dificuldade); // compara com a Sorte ANTES de gastar
-    gastarSorte();
-    return sucesso;
+    dado = rolarDado(10);
+    return (dado + dificuldade <= sorte);
 }
 
 int Personagem::rolarDado(int lados)

@@ -8,9 +8,9 @@ Morcegos espectrais descem do teto. Seus corpos foram alterados pela energia som
 
 N: Morcegos espectrais
 M: S
-H: 11
+H: 13
 S: 12
-E: 10
+E: 16
 T: 120
 P: 2
 8;14

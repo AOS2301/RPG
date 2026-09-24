@@ -5,9 +5,9 @@ Ela desce do teto sem emitir um unico som.
 
 N: Aranha de minerio
 M: S
-H: 7
-S: 6
-E: 8
+H: 13
+S: 8
+E: 14
 T: 20
 P: 1
 23;21

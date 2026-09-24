@@ -36,7 +36,7 @@ public:
     // ---- Sorte ----
     // Em qualquer teste a Sorte eh gasta em 1 ponto, com sucesso ou nao (enunciado).
     bool testarSorte();                                 // combate: sorteia 1d10 e compara com a Sorte atual
-    bool testarSorteContra(int dificuldade, int &dado); // cenas: 1d6 + Sorte > dificuldade
+    bool testarSorteContra(int dificuldade, int &dado); // cenas: passa se 1d10 + dificuldade <= Sorte (nao gasta Sorte)
 
     // ---- Energia ----
     void receberDano(int dano);

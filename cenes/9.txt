@@ -15,7 +15,7 @@ Seu pai ataca, lutando contra voce e contra a magia que o domina.
 
 N: Auren, o Guardiao Corrompido
 M: S
-H: 13
+H: 15
 S: 12
-E: 18
+E: 22
 10;15
