@@ -2,16 +2,15 @@
             O REI GUARDIAO - Valdora
 ==================================================
 
-O Farol de Ambar se apagou ha tres noites. Animais
-fogem das florestas, viajantes desaparecem e
-criaturas deformadas surgem nas estradas.
+  Ha tres noites, o Farol de Ambar se apagou.
 
-Seu pai, um Guardiao da Ordem, sumiu ha tres anos
-nas ruinas da Fortaleza de Auren. Todos dizem que
-esta morto... mas o medalhao dele acaba de chegar
-as suas maos.
+  Desde entao, criaturas deformadas descem as
+  montanhas do norte, e um nome esquecido volta
+  a ser sussurrado nas estradas: Vaelthar.
 
-Voce decide seguir o rastro dele ate as ruinas.
+  Seu pai partiu para a Fortaleza de Auren ha
+  tres anos e nunca voltou. Agora, o medalhao
+  dele esta nas suas maos.
 
 --------------------------------------------------
   1 - Novo jogo

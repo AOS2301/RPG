@@ -1,22 +1,22 @@
 #1
-O vento frio atravessa as arvores mortas enquanto voce caminha pela antiga Estrada dos Guardioes. A sua frente, alem da nevoa, erguem-se as ruinas de Valdora.
+Tres noites atras, uma mulher bateu a porta da sua casa no meio da tempestade. Estava ferida, com a capa rasgada e o simbolo da Ordem dos Guardioes costurado no ombro. Disse se chamar Lira.
 
-Ha tres noites, o Farol de Ambar se apagou. Desde entao, animais fogem das florestas, viajantes desaparecem e criaturas deformadas sao vistas nas estradas.
+Nas maos, ela trazia o medalhao de ferro de seu pai.
 
-Seu pai desapareceu ha pouco mais de tres anos, durante uma investigacao nas ruinas da Fortaleza de Auren. Ele era membro da Ordem dos Guardioes, uma organizacao dedicada a proteger os selos que mantinham as criaturas do norte afastadas.
+"Ele me pediu para entregar isto a voce", ela disse, com a voz fraca, "se um dia o Farol de Ambar se apagasse."
 
-Todos disseram que ele estava morto.
+Naquela mesma noite, pela primeira vez em cem anos, a luz do farol no alto das montanhas se apagou.
 
-Na noite anterior a sua partida, porem, uma mensageira ferida chegou a sua vila carregando o medalhao de ferro de seu pai.
+Antes de desmaiar, Lira segurou seu braco com forca:
 
-Antes de perder a consciencia, ela sussurrou:
+"Vaelthar voltou. A chama ainda pode ser salva... mas so pelo sangue de Auren."
 
-"A chama ainda existe... mas ele tambem voltou."
+Seu pai era um Guardiao da Ordem, os protetores dos selos que mantinham as criaturas do norte longe de Valdora. Ha tres anos, ele partiu para investigar as ruinas da Fortaleza de Auren e nunca mais voltou. Todos disseram que ele estava morto.
 
-O medalhao possui uma pequena pedra dourada que pulsa quando voce se aproxima da fortaleza.
+Agora voce caminha sozinho pela antiga Estrada dos Guardioes, com o medalhao pendurado no peito. A pequena pedra dourada no centro dele pulsa mais forte a cada passo em direcao a fortaleza.
 
-A estrada se divide.
+A estrada se divide. A esquerda, a velha Capela de Santa Elara, onde seu pai costumava se reunir com a Ordem. A frente, a ponte em ruinas que leva direto a fortaleza.
 
 I: Medalhao dos Guardioes;c;0;0;0
-#2: Investigar a Capela de Santa Elara
-#29: Atravessar a ponte em ruinas em direcao a fortaleza
+#2: Ir ate a Capela de Santa Elara em busca de pistas do seu pai
+#29: Atravessar a ponte em ruinas direto para a fortaleza
