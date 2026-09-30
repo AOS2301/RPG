@@ -7,4 +7,4 @@ A mensagem explica que seu pai tentou pagar o preco sozinho e acabou sendo captu
 
 Voce compreende que a batalha final nao sera apenas pela fortaleza, mas pela escolha de como honrar o sacrificio dele.
 
-#6: Retornar a sala de manutencao e procurar outra rota
+#6: Seguir pelos corredores de servico ate a sala de manutencao

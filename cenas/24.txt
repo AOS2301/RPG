@@ -12,4 +12,5 @@ S: 9
 E: 16
 T: 40
 P: 1
+I: Pergaminho de Luz;c;1;0;4
 25;8

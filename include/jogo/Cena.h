@@ -3,71 +3,64 @@
 
 #include <string>
 #include <vector>
+#include "../personagens/Monstro.h"
 
 using namespace std;
 
-// Le um arquivo de cena (cenes/N.txt) e guarda o conteudo em memoria.
-// Serve para os tres tipos de cena: narrativa, monstro e teste de sorte.
+// Le um arquivo de cena (cenas/N.txt) e guarda o conteudo.
+// A primeira linha diz o tipo da cena:
+//   "#N" -> narrativa: texto, itens (I:) e opcoes (#destino: texto)
+//   "m"  -> monstro: texto, dados do monstro (N, M, H, S, E, T, P, I) e "vitoria;derrota"
+//   "s"  -> teste de sorte: texto, dano se falhar (X) e "sucesso;falha"
+// A Cena so guarda os dados: quem mostra na tela e decide e o Jogo.
 class Cena
 {
+private:
+    char tipo;    // 'n' narrativa, 'm' monstro, 's' teste de sorte
+    string texto; // texto da historia
+
+    vector<string> itens;         // linhas "nome;tipo;combate;FA;dano"
+    vector<string> textosOpcoes;  // texto de cada escolha
+    vector<int> destinosOpcoes;   // numero da cena de cada escolha
+
+    // Monstro (so na cena 'm')
+    string nomeMonstro;
+    bool podeFugir;
+    int habilidade;
+    int sorte;
+    int energia;
+    int tesouro;
+    int provisoes;
+
+    // Cenas 'm' e 's': para onde ir se der certo ou errado
+    int destinoSucesso;
+    int destinoFalha;
+    int danoFalha; // X: energia perdida se falhar no teste de sorte
+
+    string semEspacos(string texto); // tira espacos do inicio do texto
+
 public:
     Cena();
 
-    // Retorna false se o arquivo nao puder ser aberto.
-    bool carregar(string caminho);
+    // Le cenas/<numero>.txt. Retorna false se o arquivo nao abrir.
+    bool carregar(int numero);
 
-    bool ehMonstro();
-    bool ehTesteDeSorte();
+    char getTipo();
     string getTexto();
 
-    // Opcoes de escolha (linhas "#N: texto")
-    int getQuantidadeOpcoes();
-    string getTextoOpcao(int indice);
-    int getDestinoOpcao(int indice);
-
-    // Itens (linhas "I: nome;tipo;combate;FA;dano"), guardados como texto puro
     int getQuantidadeItens();
     string getItem(int indice);
 
-    // Dados do monstro (so fazem sentido se ehMonstro() for true)
-    string getNomeMonstro();
-    int getHabilidadeMonstro();
-    int getSorteMonstro();
-    int getEnergiaMonstro();
-    int getOuro();
-    int getProvisoes();
+    int getQuantidadeOpcoes(); // 0 = final da historia
+    string getTextoOpcao(int indice);
+    int getDestinoOpcao(int indice);
+
+    // Cria o monstro da cena com new (quem chama faz o delete).
+    Monstro *criarMonstro();
+
     int getDestinoSucesso();
-    int getDestinoDerrota();
-
-    // Dados do teste de sorte (so fazem sentido se ehTesteDeSorte() for true).
-    // Uso da Sorte fora de combate, conforme o enunciado: sorteia-se um valor
-    // (1d10) e compara com a Sorte. A dificuldade da cena (D) soma no dado:
-    // passa se 1d10 + D <= Sorte. Se falhar, sofre o dano da cena (X).
-    // Esse teste nao gasta Sorte (so o de combate gasta).
-    int getDificuldadeSorte();
-    int getDanoFalhaSorte();
-
-    void limpar();
-
-private:
-    bool monstro;
-    bool testeSorte;
-    string texto;
-    vector<string> textosOpcoes;
-    vector<int> destinosOpcoes;
-    vector<string> itens;
-
-    string nomeMonstro;
-    int habilidadeMonstro;
-    int sorteMonstro;
-    int energiaMonstro;
-    int ouro;
-    int provisoes;
-    int destinoSucesso;
-    int destinoDerrota;
-
-    int dificuldadeSorte;
-    int danoFalhaSorte;
+    int getDestinoFalha();
+    int getDanoFalha();
 };
 
-#endif // CENA_H
+#endif

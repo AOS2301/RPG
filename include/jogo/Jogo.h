@@ -9,54 +9,51 @@
 
 using namespace std;
 
+// Controla o jogo inteiro: menus, telas, leitura do teclado,
+// o caminho entre as cenas, as batalhas e o salvar/carregar.
+// As outras classes guardam dados e regras; o Jogo conversa com o usuario.
 class Jogo
 {
+private:
+    Jogador *jogador;              // personagem da partida atual (nullptr se nenhuma)
+    int cenaAtual;                 // numero da cena em que o jogador esta
+    vector<int> cenasVisitadas;    // cenas ja vistas (itens so sao dados na 1a visita)
+    vector<int> monstrosDerrotados; // cenas de monstro ja vencidas
+
+    // ---- Auxiliares de tela e teclado ----
+    void separador();
+    void pausar();                          // espera o Enter
+    int lerOpcao(int minimo, int maximo);   // le um numero dentro do intervalo
+    void mostrarArquivo(string caminho);    // imprime um arquivo de telas/
+    bool estaNaLista(vector<int> &lista, int numero);
+
+    // ---- Telas ----
+    void mostrarCreditos();
+    void criarPersonagem();
+    void telaInventario();
+    void usarPontosGuardados();
+
+    // ---- Aventura ----
+    void jogar(); // loop das cenas ate o fim da historia ou a morte
+
+    // Cada tipo de cena devolve o numero da proxima cena (0 = fim da historia)
+    int cenaNarrativa(Cena &cena);
+    int cenaMonstro(Cena &cena);
+    int cenaSorte(Cena &cena);
+
+    bool batalha(Monstro *monstro); // true se venceu o monstro
+    void rodadaDeAtaque(Monstro *monstro, bool testarSorte); // uma troca de golpes
+    void usarItemEmCombate(Monstro *monstro);
+
+    // ---- Salvar / Carregar (um arquivo por personagem: data/<nome>.txt) ----
+    void salvarJogo();
+    bool carregarJogo();
+
 public:
     Jogo();
     ~Jogo();
 
-    void iniciar(); // tela de abertura + menu principal
-
-    // Telas e entrada
-    void exibirArquivo(string caminho);
-    int lerInteiro();
-    void mostrarCreditos();
-    void criarPersonagem();
-    void mostrarFicha();
-    void menuFicha();         // ficha + comer provisao + evolucao + trocar equipamento
-    void distribuirPontos();  // tela de evolucao do personagem
-    void trocarEquipamento(); // escolhe a arma e a armadura equipadas
-
-    // Loop da aventura
-    // novaPartida=true zera o progresso (cena 1); false continua de onde o
-    // jogo salvo (carregarJogo) deixou, sem mexer em cenaAtual/vetores.
-    void jogar(bool novaPartida = true);
-    void executarCenaNormal(Cena &cena, bool &fim, bool primeiraVez);
-    void executarCenaMonstro(Cena &cena);
-    void executarCenaTesteSorte(Cena &cena); // teste de sorte fora de combate (ex: atravessar uma ponte)
-    bool batalha(Cena &cena);
-    void usarMagia(Monstro &monstro); // submenu de "Usar Magia" dentro da batalha
-    void receberItem(string linha);
-
-    // Controle do que ja aconteceu na aventura
-    bool foiVisitada(int numeroCena);
-    bool jaDerrotou(int numeroCena);
-
-    // Salvar/Carregar (ver secao "Salvar/Carregar" do enunciado).
-    // Cada personagem tem seu proprio arquivo (data/<nome>.txt), o que de
-    // quebra permite manter mais de uma partida salva ao mesmo tempo.
-    void salvarJogo();
-    bool carregarJogo(string nome); // false se nao existe save com esse nome (ou arquivo invalido)
-
-    void limparTerminal();
-
-private:
-    string caminhoSave(string nome); // monta "data/<nome>.txt"
-
-    Jogador *jogador;
-    int cenaAtual;
-    vector<int> cenasVisitadas;     // cenas que o jogador ja viu
-    vector<int> monstrosDerrotados; // cenas de monstro ja vencidas
+    void executar(); // tela de abertura e menu principal
 };
 
-#endif // JOGO_H
+#endif

@@ -3,6 +3,5 @@ A escada que desce ate a cripta dos guardioes esta coberta de rachaduras. A cada
 
 Na metade da descida, varios degraus desabam ao mesmo tempo. Voce precisa saltar para o proximo patamar antes que a escada inteira ceda.
 
-D: 3
 X: 3
 24;34

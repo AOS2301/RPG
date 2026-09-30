@@ -3,14 +3,14 @@
 
 #include "Item.h"
 
-// Armadura (tipo 'r'): FA eh descontado da Forca de Ataque do oponente e
-// dano eh quanto do dano recebido eh reduzido (enunciado).
+// Armadura (tipo 'r'): FA reduz a Forca de Ataque do oponente
+// e dano reduz o dano recebido.
 class Armadura : public Item
 {
 public:
     Armadura(string nome, bool combate, int fa, int dano);
 
-    string imprimeInfo() override;
+    void mostrar();
 };
 
-#endif // ARMADURA_H
+#endif

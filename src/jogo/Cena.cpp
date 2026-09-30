@@ -1,115 +1,123 @@
-#include "../../include/jogo/Cena.h"
-#include "../../include/util/Texto.h"
 #include <fstream>
-#include <cctype>
+#include "../../include/jogo/Cena.h"
+#include "../../include/itens/CriarItem.h"
 
 Cena::Cena()
 {
-    limpar();
-}
-
-void Cena::limpar()
-{
-    monstro = false;
-    testeSorte = false;
+    tipo = 'n';
     texto = "";
-    textosOpcoes.clear();
-    destinosOpcoes.clear();
-    itens.clear();
     nomeMonstro = "";
-    habilidadeMonstro = 0;
-    sorteMonstro = 0;
-    energiaMonstro = 0;
-    ouro = 0;
-    provisoes = 0;
+    podeFugir = true;
+    habilidade = 0;
+    sorte = 0;
+    energia = 0;
+    tesouro = 0;   // se a cena nao tiver T, o monstro nao da tesouro
+    provisoes = 0; // se a cena nao tiver P, o monstro nao da provisoes
     destinoSucesso = 0;
-    destinoDerrota = 0;
-    dificuldadeSorte = 0;
-    danoFalhaSorte = 0;
+    destinoFalha = 0;
+    danoFalha = 0;
 }
 
-bool Cena::carregar(string caminho)
+string Cena::semEspacos(string texto)
 {
-    limpar();
+    while (texto.size() > 0 && texto[0] == ' ')
+    {
+        texto = texto.substr(1);
+    }
+    return texto;
+}
 
+bool Cena::carregar(int numero)
+{
     ifstream arquivo;
-    arquivo.open(caminho);
-
-    if (arquivo.fail()){
+    arquivo.open("cenas/" + to_string(numero) + ".txt"); // to_string: int -> texto
+    if (!arquivo.is_open())
+    {
         return false;
     }
 
     string linha;
 
-    // 1a linha: "#N" (cena de narrativa), "m" (cena de monstro) ou
-    // "s" (teste de sorte fora de combate, ex: atravessar uma ponte).
+    // Primeira linha: tipo da cena
     getline(arquivo, linha);
-    linha = aparar(linha);
-    monstro = (!linha.empty() && linha[0] == 'm');
-    testeSorte = (!linha.empty() && linha[0] == 's');
+    if (linha.size() > 0 && linha[0] == 'm')
+    {
+        tipo = 'm';
+    }
+    else if (linha.size() > 0 && linha[0] == 's')
+    {
+        tipo = 's';
+    }
+    else
+    {
+        tipo = 'n';
+    }
 
-    // Demais linhas: cada uma eh texto, opcao, item ou dado do monstro.
+    // Demais linhas
     while (getline(arquivo, linha))
     {
-        linha = aparar(linha);
+        // Arquivo salvo no Windows termina a linha com '\r': tiramos para
+        // o jogo funcionar igual no Linux e no Windows.
+        if (linha.size() > 0 && linha[linha.size() - 1] == '\r')
+        {
+            linha = linha.substr(0, linha.size() - 1);
+        }
 
-        if (linha.substr(0, 2) == "I:")
+        string inicio = linha.substr(0, 2); // 2 primeiras letras, ex: "I:"
+
+        if (inicio == "I:")
         {
-            itens.push_back(aparar(linha.substr(2)));
+            itens.push_back(semEspacos(linha.substr(2)));
         }
-        else if (!linha.empty() && linha[0] == '#')
+        else if (linha.size() > 1 && linha[0] == '#' && linha.find(':') != string::npos)
         {
-            // "#2: Investigar a capela" -> destino 2, texto "Investigar a capela"
-            size_t doisPontos = linha.find(':');
+            // Opcao: "#2: Investigar a capela" -> destino 2, texto "Investigar a capela"
+            int doisPontos = linha.find(':');
             destinosOpcoes.push_back(stoi(linha.substr(1, doisPontos - 1)));
-            textosOpcoes.push_back(aparar(linha.substr(doisPontos + 1)));
+            textosOpcoes.push_back(semEspacos(linha.substr(doisPontos + 1)));
         }
-        else if (monstro && linha.substr(0, 2) == "N:")
+        else if (tipo == 'm' && inicio == "N:")
         {
-            nomeMonstro = aparar(linha.substr(2));
+            nomeMonstro = semEspacos(linha.substr(2));
         }
-        else if (monstro && linha.substr(0, 2) == "H:")
+        else if (tipo == 'm' && inicio == "M:")
         {
-            habilidadeMonstro = stoi(linha.substr(2));
+            podeFugir = (semEspacos(linha.substr(2)) != "N"); // "N" = nao pode fugir
         }
-        else if (monstro && linha.substr(0, 2) == "S:")
+        else if (tipo == 'm' && inicio == "H:")
         {
-            sorteMonstro = stoi(linha.substr(2));
+            habilidade = stoi(linha.substr(2));
         }
-        else if (monstro && linha.substr(0, 2) == "E:")
+        else if (tipo == 'm' && inicio == "S:")
         {
-            energiaMonstro = stoi(linha.substr(2));
+            sorte = stoi(linha.substr(2));
         }
-        else if (monstro && linha.substr(0, 2) == "T:")
+        else if (tipo == 'm' && inicio == "E:")
         {
-            ouro = stoi(linha.substr(2));
+            energia = stoi(linha.substr(2));
         }
-        else if (monstro && linha.substr(0, 2) == "P:")
+        else if (tipo == 'm' && inicio == "T:")
+        {
+            tesouro = stoi(linha.substr(2));
+        }
+        else if (tipo == 'm' && inicio == "P:")
         {
             provisoes = stoi(linha.substr(2));
         }
-        else if (testeSorte && linha.substr(0, 2) == "D:")
+        else if (tipo == 's' && inicio == "X:")
         {
-            // Dificuldade do teste: soma no dado (passa se 1d10 + D <= Sorte).
-            dificuldadeSorte = stoi(linha.substr(2));
+            danoFalha = stoi(linha.substr(2));
         }
-        else if (testeSorte && linha.substr(0, 2) == "X:")
+        else if (tipo != 'n' && linha.size() > 0 && linha[0] >= '0' && linha[0] <= '9' && linha.find(';') != string::npos)
         {
-            // Dano sofrido se o jogador falhar no teste.
-            danoFalhaSorte = stoi(linha.substr(2));
-        }
-        else if ((monstro || testeSorte) && !linha.empty() && isdigit(linha[0]))
-        {
-            // "12;13" -> cena se vencer/passar ; cena se perder/falhar
-            // (mesma convencao usada nas cenas de monstro)
-            size_t pontoEVirgula = linha.find(';');
-            destinoSucesso = stoi(linha.substr(0, pontoEVirgula));
-            destinoDerrota = stoi(linha.substr(pontoEVirgula + 1));
+            // Linha "12;13": sucesso;falha
+            int pontoVirgula = linha.find(';');
+            destinoSucesso = stoi(linha.substr(0, pontoVirgula));
+            destinoFalha = stoi(linha.substr(pontoVirgula + 1));
         }
         else
         {
-            // Qualquer outra linha faz parte do texto da narrativa.
-            texto += linha + "\n";
+            texto = texto + linha + "\n"; // qualquer outra linha faz parte do texto
         }
     }
 
@@ -117,14 +125,9 @@ bool Cena::carregar(string caminho)
     return true;
 }
 
-bool Cena::ehMonstro()
+char Cena::getTipo()
 {
-    return monstro;
-}
-
-bool Cena::ehTesteDeSorte()
-{
-    return testeSorte;
+    return tipo;
 }
 
 string Cena::getTexto()
@@ -132,59 +135,40 @@ string Cena::getTexto()
     return texto;
 }
 
-int Cena::getQuantidadeOpcoes()
-{
-    return static_cast<int>(textosOpcoes.size());
-}
-
-string Cena::getTextoOpcao(int indice)
-{
-    return textosOpcoes.at(indice);
-}
-
-int Cena::getDestinoOpcao(int indice)
-{
-    return destinosOpcoes.at(indice);
-}
-
 int Cena::getQuantidadeItens()
 {
-    return static_cast<int>(itens.size());
+    return (int)itens.size();
 }
 
 string Cena::getItem(int indice)
 {
-    return itens.at(indice);
+    return itens[indice];
 }
 
-string Cena::getNomeMonstro()
+int Cena::getQuantidadeOpcoes()
 {
-    return nomeMonstro;
+    return (int)textosOpcoes.size();
 }
 
-int Cena::getHabilidadeMonstro()
+string Cena::getTextoOpcao(int indice)
 {
-    return habilidadeMonstro;
+    return textosOpcoes[indice];
 }
 
-int Cena::getSorteMonstro()
+int Cena::getDestinoOpcao(int indice)
 {
-    return sorteMonstro;
+    return destinosOpcoes[indice];
 }
 
-int Cena::getEnergiaMonstro()
+Monstro *Cena::criarMonstro()
 {
-    return energiaMonstro;
-}
-
-int Cena::getOuro()
-{
-    return ouro;
-}
-
-int Cena::getProvisoes()
-{
-    return provisoes;
+    // O monstro carrega o primeiro item da cena (se houver), para entregar ao morrer
+    Item *item = nullptr;
+    if (itens.size() > 0)
+    {
+        item = criarItem(itens[0]);
+    }
+    return new Monstro(nomeMonstro, habilidade, energia, sorte, tesouro, provisoes, item, podeFugir);
 }
 
 int Cena::getDestinoSucesso()
@@ -192,17 +176,12 @@ int Cena::getDestinoSucesso()
     return destinoSucesso;
 }
 
-int Cena::getDestinoDerrota()
+int Cena::getDestinoFalha()
 {
-    return destinoDerrota;
+    return destinoFalha;
 }
 
-int Cena::getDificuldadeSorte()
+int Cena::getDanoFalha()
 {
-    return dificuldadeSorte;
-}
-
-int Cena::getDanoFalhaSorte()
-{
-    return danoFalhaSorte;
+    return danoFalha;
 }

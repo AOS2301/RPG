@@ -9,7 +9,8 @@ Todo personagem comeca com valores minimos:
   SORTE      = 6   (testes e golpes,     maximo 12)
 
 Voce tem 12 PONTOS EXTRAS para distribuir entre os
-tres atributos. Devem ser usados todos os 12.
+tres atributos. Os que sobrarem ficam guardados
+para usar depois, na tela de inventario.
 
   Extras em HABILIDADE: de 0 a 6
   Extras em ENERGIA:    de 0 a 12

@@ -1,5 +1,5 @@
 #16
-A passagem secreta leva a uma galeria esquecida, onde antigos guardioes esconderam suprimentos e mapas.
+A passagem leva a uma galeria esquecida, onde antigos guardioes esconderam suprimentos e mapas.
 
 Em uma parede, voce encontra uma mensagem escrita por seu pai:
 
@@ -9,5 +9,5 @@ Um mapa indica uma rota ate a Camara da Primeira Chama. Ao longe, uma luz dourad
 
 Voce aperta o medalhao e segue adiante, decidido a descobrir toda a verdade sobre Vaelthar e o destino de seu pai.
 
-#7: Retornar as minas e alcancar a Camara da Primeira Chama
-#6: Voltar a sala de manutencao e procurar outra rota
+#7: Atravessar as minas ate a Camara da Primeira Chama
+#6: Seguir ate a sala de manutencao e procurar outra rota

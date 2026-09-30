@@ -9,6 +9,6 @@ Seu pai tenta resistir, mas a visao termina antes de mostrar o desfecho.
 
 Uma inscricao revela que a chama reage a vontade de quem a carrega. Voce a recolhe, sentindo uma presenca sombria observando seus movimentos.
 
-I: Chama Primordial;c;1;0;0
+I: Chama Primordial;c;0;0;0
 #9: Subir ate o topo da Fortaleza de Auren
 #33: Descer a cripta dos guardioes antes de subir

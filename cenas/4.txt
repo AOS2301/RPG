@@ -9,5 +9,5 @@ Uma segunda frase foi escrita com tinta escura:
 
 "Ele nao me matou. Ele me levou."
 
-I: Armadura dos Guardioes;r;1;1;2
+I: Armadura dos Guardioes;r;1;1;1
 #6: Seguir para a entrada das minas

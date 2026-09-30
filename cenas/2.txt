@@ -9,4 +9,4 @@ Um ruido surge do lado de fora. Alguem parece estar seguindo seus passos.
 
 I: Adaga de prata;w;1;1;1
 #4: Investigar o cemiterio atras da capela
-#6: Seguir as anotacoes ate a entrada das minas
+#6: Seguir a trilha dos mineiros ate a entrada das minas

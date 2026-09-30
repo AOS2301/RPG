@@ -4,65 +4,43 @@
 #include "Personagem.h"
 #include "../inventario/Inventario.h"
 
-// Personagem controlado pelo usuario. Alem do que todo Personagem tem,
-// possui inventario (arma e armadura equipadas contam no combate),
-// usa itens magicos, testa a sorte em combate e evolui de nivel.
-// Assim como Personagem, nao imprime nada: o Jogo mostra os resultados.
+// Personagem controlado pelo usuario.
+// Alem do que todo Personagem tem, possui um inventario (criado com new)
+// e uma energia maxima (limite para recuperar energia com provisoes).
 class Jogador : public Personagem
 {
+private:
+    Inventario *inventario; // cada jogador tem o seu proprio inventario
+    int energiaMaxima;      // energia escolhida na criacao do personagem
+    int pontosGuardados;    // pontos da criacao que o jogador deixou para depois
+
 public:
-    // Limites dos atributos: os mesmos da criacao do personagem (enunciado).
-    static constexpr int MAX_HABILIDADE = 12;
-    static constexpr int MAX_ENERGIA = 24;
-    static constexpr int MAX_SORTE = 12;
-
     Jogador(string nome, int habilidade, int energia, int sorte);
-    ~Jogador() override;
+    ~Jogador();
 
-    // ---- Combate (versoes do Jogador, que consideram os equipamentos) ----
-    int calcularForcaAtaque() override; // 1d10 + habilidade + FA da arma
-    int calcularDano() override;        // dano base + dano da arma
-    int getProtecaoFA() override;       // FA da armadura equipada
-    int getProtecaoDano() override;     // dano da armadura equipada
+    Inventario *getInventario();
+    int getEnergiaMaxima();
 
-    // Testa a Sorte depois de uma rodada em que alguem foi ferido (enunciado:
-    // a sorte amplia o dano causado ou reduz o dano recebido).
-    //   venceuRodada=true : sucesso +2 de dano no oponente, falha -1
-    //   venceuRodada=false: sucesso -1 de dano recebido, falha +1
-    // Retorna true se o teste teve sucesso. So deve ser chamado com Sorte > 0.
-    bool usarSorteEmCombate(Personagem *oponente, bool venceuRodada);
+    // Combate: todos consideram o que esta equipado no inventario
+    int forcaAtaque();  // 1 a 10 + habilidade + FA da arma
+    int danoAtaque();   // 2 + dano da arma
+    int protecaoFA();   // FA da armadura: diminui a Forca de Ataque do monstro
+    int protecaoDano(); // dano da armadura: diminui o dano que o jogador recebe
 
-    // Usa (e consome) o item magico da posicao "indice" contra o alvo.
-    // A magia nunca erra. Retorna o dano causado (0 se o indice for invalido).
-    int usarItemMagico(int indice, Personagem *alvo);
+    // Come uma provisao: +4 de energia, sem passar da energia maxima.
+    // Retorna false se nao houver provisao.
+    bool usarProvisao();
 
-    // Derrotado (em combate ou numa queda), o jogador nao morre: a historia
-    // continua com metade da energia maxima.
-    void recuperarAposDerrota();
+    // Usado ao carregar um jogo salvo e ao se recuperar de uma derrota em combate.
+    void setEnergia(int energia);
 
-    // ---- Inventario (armas, armaduras, itens, ouro, provisoes) ----
-    Inventario &getInventario();
-    bool usarProvisao(); // +4 de energia (so fora de combate)
+    // Pontos que sobraram na criacao do personagem
+    int getPontosGuardados();
+    void setPontosGuardados(int pontos);
 
-    // ---- Evolucao ----
-    int getNivel();
-    int getExperiencia();
-    int getExperienciaParaProximoNivel();
-    int getPontosEvolucao();
-    int ganharExperiencia(int quantidade); // retorna quantos niveis subiu
-    bool podeEvoluir();                    // ha pontos E algum atributo abaixo do limite?
-    bool evoluirAtributo(char atributo);   // 'h' habilidade, 'e' energia, 's' sorte
-
-    // Setters usados na criacao do personagem e ao restaurar um jogo salvo.
-    void setNivel(int nivel);
-    void setExperiencia(int experiencia);
-    void setPontosEvolucao(int pontosEvolucao);
-
-protected:
-    Inventario inventario;
-    int nivel;
-    int experiencia;    // experiencia acumulada dentro do nivel atual
-    int pontosEvolucao; // pontos ainda nao distribuidos
+    // Gasta 1 ponto guardado em 'h' (habilidade), 'e' (energia) ou 's' (sorte).
+    // Retorna false se nao houver pontos ou se o atributo ja estiver no maximo.
+    bool usarPonto(char atributo);
 };
 
-#endif // JOGADOR_H
+#endif

@@ -1,29 +1,13 @@
-#include <iostream>
 #include <cstdlib>
 #include <ctime>
-
-// O projeto compila com um unico comando (g++ main.cpp -o jogo.exe):
-// cada .cpp eh incluido aqui, na ordem das dependencias.
-#include "src/util/Texto.cpp"
-#include "src/itens/Item.cpp"
-#include "src/itens/Arma.cpp"
-#include "src/itens/Armadura.cpp"
-#include "src/itens/ItemMagico.cpp"
-#include "src/inventario/Inventario.cpp"
-#include "src/personagens/Personagem.cpp"
-#include "src/personagens/Jogador.cpp"
-#include "src/personagens/Monstro.cpp"
-#include "src/jogo/Cena.cpp"
-#include "src/jogo/Jogo.cpp"
-
-using namespace std;
+#include "include/jogo/Jogo.h"
 
 int main()
 {
-    srand(static_cast<unsigned int>(time(nullptr))); // semeia o rand() com o horario atual, senao todo jogo sorteia sempre a mesma sequencia
+    srand(time(nullptr)); // sem isso o rand() sorteia sempre os mesmos numeros
 
     Jogo jogo;
-    jogo.iniciar();
+    jogo.executar();
 
     return 0;
 }

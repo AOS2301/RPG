@@ -1,77 +1,59 @@
 #ifndef INVENTARIO_H
 #define INVENTARIO_H
 
-#include <string>
 #include <vector>
 #include <fstream>
 #include "../itens/Item.h"
-#include "../itens/Arma.h"
-#include "../itens/Armadura.h"
-#include "../itens/ItemMagico.h"
 
-using namespace std;
-
-// Guarda tudo que o Jogador adquire durante a aventura: armas, armaduras,
-// itens magicos, itens comuns, ouro e provisoes. Tambem sabe salvar e
-// carregar os proprios dados (chamado de dentro de Jogo::salvarJogo e
-// Jogo::carregarJogo, no mesmo arquivo de save do personagem).
-//
-// So guarda e organiza os dados: nao imprime nada na tela.
+// Guarda tudo que o jogador carrega: itens (armas, armaduras e itens comuns),
+// o que esta equipado, ouro (tesouro) e provisoes.
+// O inventario e DONO dos itens: quando ele e destruido, apaga todos.
 class Inventario
 {
+private:
+    vector<Item *> itens;
+
+    Item *armaEquipada;     // aponta para uma arma do vetor (ou nullptr)
+    Item *armaduraEquipada; // aponta para uma armadura do vetor (ou nullptr)
+
+    int ouro;      // tesouro (T das cenas de monstro)
+    int provisoes; // cada uma recupera 4 de energia
+
 public:
     Inventario();
     ~Inventario();
 
-    // Recebe uma linha de item de cena ("nome;tipo;combate;FA;dano"), cria o
-    // item certo e guarda na lista certa. Se for arma/armadura melhor que a
-    // equipada, ja equipa. Retorna o item criado (nullptr se a linha for invalida).
-    Item *adicionarItem(string linha);
+    // Guarda o item (o inventario passa a ser o dono dele).
+    // Se for arma ou armadura e nao houver nenhuma equipada, ja equipa.
+    void adicionarItem(Item *item);
 
-    // Armas
-    int getQuantidadeArmas();
-    Arma *getArma(int indice);
-    Arma *getArmaEquipada();
-    bool equiparArma(int indice); // false se o indice nao existir
+    int getQuantidade();
+    Item *getItem(int indice); // nullptr se o indice nao existir
 
-    // Armaduras
-    int getQuantidadeArmaduras();
-    Armadura *getArmadura(int indice);
-    Armadura *getArmaduraEquipada();
-    bool equiparArmadura(int indice); // false se o indice nao existir
+    // Equipa a arma ou armadura da posicao "indice".
+    // Retorna false se o indice nao existir ou se o item for comum.
+    bool equipar(int indice);
 
-    // Itens magicos (usados na opcao "Usar Magia" da batalha)
-    int getQuantidadeItensMagicos();
-    ItemMagico *getItemMagico(int indice);
-    ItemMagico *removerItemMagico(int indice); // tira da lista; quem chama faz o delete
+    // Apaga o item da posicao "indice" (ex: pergaminho usado em combate)
+    // e puxa os seguintes uma posicao para tras.
+    void removerItem(int indice);
 
-    // Itens comuns (sem efeito em combate, ex: chaves)
-    int getQuantidadeItensComuns();
-    Item *getItemComum(int indice);
+    Item *getArmaEquipada();
+    Item *getArmaduraEquipada();
 
-    // Ouro e provisoes
     void adicionarOuro(int quantidade);
     int getOuro();
+
     void adicionarProvisoes(int quantidade);
     int getProvisoes();
-    bool consumirProvisao(); // false se nao houver provisao
+    bool gastarProvisao(); // false se nao houver provisao
 
-    // Persistencia
+    void mostrar(); // lista itens, equipados, ouro e provisoes
+
+    // Grava/le a parte do inventario no arquivo de save que o Jogo ja abriu.
+    // O & passa o proprio arquivo (um arquivo nao pode ser copiado).
     void salvar(ofstream &arquivo);
-    bool carregar(ifstream &arquivo); // false se os dados estiverem corrompidos
-
-private:
-    Item *guardarItem(string linha); // cria e guarda o item, sem equipar
-    void liberarItens();             // delete em todos os itens e limpa as listas
-
-    vector<Arma *> armas;
-    vector<Armadura *> armaduras;
-    vector<ItemMagico *> itensMagicos;
-    vector<Item *> itensComuns;
-    Arma *armaEquipada;
-    Armadura *armaduraEquipada;
-    int ouro;
-    int provisoes;
+    void carregar(ifstream &arquivo);
 };
 
-#endif // INVENTARIO_H
+#endif

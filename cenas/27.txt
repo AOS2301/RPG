@@ -6,10 +6,8 @@ Vaelthar ainda esta de pe entre as ruinas do farol, mas agora voce carrega uma l
 A segunda batalha comeca, mais dura que a primeira.
 
 N: Vaelthar, o Rei da Ruina
-M: S
+M: N
 H: 16
 S: 8
 E: 30
-T: 50
-P: 5
 18;28

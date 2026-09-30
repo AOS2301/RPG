@@ -19,4 +19,5 @@ S: 8
 E: 16
 T: 80
 P: 1
+I: Lamina do Sentinela;w;1;2;1
 12;13

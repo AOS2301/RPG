@@ -12,5 +12,5 @@ H: 13
 S: 12
 E: 16
 T: 120
-P: 2
+I: Essencia Espectral;c;1;0;3
 8;14
