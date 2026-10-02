@@ -30,7 +30,7 @@ Item *criarItem(string linha)
     string nome = tirarCampo(linha);
     char tipo = tirarCampo(linha)[0];            // primeira letra: w, r ou c
     bool combate = (tirarCampo(linha) == "1");   // "1" = pode usar em combate
-    int fa = stoi(tirarCampo(linha));            // stoi: converte texto em int
+    int fa = stoi(tirarCampo(linha));
     int dano = stoi(tirarCampo(linha));
 
     if (tipo == 'w')

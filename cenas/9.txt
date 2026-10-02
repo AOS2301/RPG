@@ -14,7 +14,7 @@ Por um instante, sua voz e a mesma que voce recorda da infancia. Entao o feitico
 Seu pai ataca, lutando contra voce e contra a magia que o domina.
 
 N: Auren, o Guardiao Corrompido
-M: S
+M: N
 H: 15
 S: 12
 E: 22

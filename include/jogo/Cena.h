@@ -19,9 +19,9 @@ private:
     char tipo;    // 'n' narrativa, 'm' monstro, 's' teste de sorte
     string texto; // texto da historia
 
-    vector<string> itens;         // linhas "nome;tipo;combate;FA;dano"
-    vector<string> textosOpcoes;  // texto de cada escolha
-    vector<int> destinosOpcoes;   // numero da cena de cada escolha
+    vector<string> itens;        // linhas "nome;tipo;combate;FA;dano"
+    vector<string> textosOpcoes; // texto de cada escolha
+    vector<int> destinosOpcoes;  // numero da cena de cada escolha
 
     // Monstro (so na cena 'm')
     string nomeMonstro;
@@ -36,8 +36,6 @@ private:
     int destinoSucesso;
     int destinoFalha;
     int danoFalha; // X: energia perdida se falhar no teste de sorte
-
-    
 
 public:
     Cena();

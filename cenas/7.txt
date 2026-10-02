@@ -7,10 +7,10 @@ As minas estao abandonadas. Ferramentas permanecem espalhadas pelo chao e mensag
 Morcegos espectrais descem do teto. Seus corpos foram alterados pela energia sombria que Vaelthar extrai da Chama Primordial.
 
 N: Morcegos espectrais
-M: S
-H: 13
-S: 12
-E: 16
+M: N
+H: 12
+S: 8
+E: 14
 T: 120
 I: Essencia Espectral;c;1;0;3
 8;14
