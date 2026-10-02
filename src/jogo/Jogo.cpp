@@ -1,7 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
-#include <stdlib.h>
 #include "../../include/jogo/Jogo.h"
 #include "../../include/itens/CriarItem.h"
 
@@ -458,7 +457,7 @@ int Jogo::cenaNarrativa(Cena &cena)
         if(0 != cena.getProvisoes())        {
             cout << "Voce recebeu ";
             cout << cena.getProvisoes();
-            cout << " provisões!";
+            cout << " provisoes!";
 
             jogador->getInventario()->adicionarProvisoes(cena.getProvisoes());
         }
@@ -529,9 +528,6 @@ int Jogo::cenaMonstro(Cena &cena)
 
     Monstro *monstro = cena.criarMonstro();
 
-    // Evolucao: vencer um monstro da 1 ponto a cada 8 de energia dele
-    // (monstros mais fortes valem mais). Calculado ANTES da batalha,
-    // porque no fim dela a energia do monstro estara em 0.
     int pontosEvolucao = monstro->getEnergia() / 8;
 
     bool venceu = batalha(monstro);

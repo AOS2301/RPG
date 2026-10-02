@@ -15,22 +15,21 @@ using namespace std;
 class Jogo
 {
 private:
-    Jogador *jogador;              // personagem da partida atual (nullptr se nenhuma)
-    int cenaAtual;                 // numero da cena em que o jogador esta
-    vector<int> cenasVisitadas;    // cenas ja vistas (itens so sao dados na 1a visita)
+    Jogador *jogador;               // personagem da partida atual (nullptr se nenhuma)
+    int cenaAtual;                  // numero da cena em que o jogador esta
+    vector<int> cenasVisitadas;     // cenas ja vistas (itens so sao dados na 1a visita)
     vector<int> monstrosDerrotados; // cenas de monstro ja vencidas
-
 public:
     Jogo();
     ~Jogo();
 
     void executar(); // tela de abertura e menu principal
 
-     // ---- Auxiliares de tela e teclado ----
+    // ---- Auxiliares de tela e teclado ----
     void separador();
-    void pausar();                          // espera o Enter
-    int lerOpcao(int minimo, int maximo);   // le um numero dentro do intervalo
-    void mostrarArquivo(string caminho);    // imprime um arquivo de telas/
+    void pausar();                        // espera o Enter
+    int lerOpcao(int minimo, int maximo); // le um numero dentro do intervalo
+    void mostrarArquivo(string caminho);  // imprime um arquivo de telas/
     bool estaNaLista(vector<int> &lista, int numero);
 
     // ---- Telas ----
@@ -47,7 +46,7 @@ public:
     int cenaMonstro(Cena &cena);
     int cenaSorte(Cena &cena);
 
-    bool batalha(Monstro *monstro); // true se venceu o monstro
+    bool batalha(Monstro *monstro);                          // true se venceu o monstro
     void rodadaDeAtaque(Monstro *monstro, bool testarSorte); // uma troca de golpes
     void usarItemEmCombate(Monstro *monstro);
 

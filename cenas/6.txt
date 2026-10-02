@@ -7,7 +7,7 @@ Uma anotacao de seu pai esta escrita na margem:
 
 "Vaelthar nao deseja apenas destruir a Ordem. Ele quer provar que todo poder deve pertencer a uma unica pessoa. A chama e a chave."
 
-Sobre a mesa, ha um dardo com runas gravadas na ponta, que brilha ao toque e uma provisão.
+Sobre a mesa, ha um dardo com runas gravadas na ponta, que brilha ao toque e uma provisao.
 
 I: Dardo Arcano;c;1;0;3
 P: 1
