@@ -25,8 +25,13 @@ Jogo::~Jogo()
 // =====================================================================
 
 void Jogo::limparTela()
-{
-    system("clear||cls");
+{   
+    // Limpa a tela do console (Windows, Linux e Mac)
+    #ifdef _WIN32
+        system("cls");
+    #else
+        system("clear");
+    #endif
 }
 
 void Jogo::separador()
