@@ -37,7 +37,7 @@ private:
     int destinoFalha;
     int danoFalha; // X: energia perdida se falhar no teste de sorte
 
-    string semEspacos(string texto); // tira espacos do inicio do texto
+    
 
 public:
     Cena();
@@ -61,6 +61,9 @@ public:
     int getDestinoSucesso();
     int getDestinoFalha();
     int getDanoFalha();
+    int getProvisoes();
+
+    string semEspacos(string texto); // tira espacos do inicio do texto
 };
 
 #endif

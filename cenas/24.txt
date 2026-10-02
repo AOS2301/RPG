@@ -6,7 +6,7 @@ Um guardiao esquecido, preso entre a morte e o dever, ergue a espada ao perceber
 "Somente os dignos... podem subir."
 
 N: Guardiao esquecido
-M: S
+M: N
 H: 14
 S: 9
 E: 16

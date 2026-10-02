@@ -20,7 +20,13 @@ private:
     vector<int> cenasVisitadas;    // cenas ja vistas (itens so sao dados na 1a visita)
     vector<int> monstrosDerrotados; // cenas de monstro ja vencidas
 
-    // ---- Auxiliares de tela e teclado ----
+public:
+    Jogo();
+    ~Jogo();
+
+    void executar(); // tela de abertura e menu principal
+
+     // ---- Auxiliares de tela e teclado ----
     void separador();
     void pausar();                          // espera o Enter
     int lerOpcao(int minimo, int maximo);   // le um numero dentro do intervalo
@@ -49,11 +55,7 @@ private:
     void salvarJogo();
     bool carregarJogo();
 
-public:
-    Jogo();
-    ~Jogo();
-
-    void executar(); // tela de abertura e menu principal
+    void limparTela();
 };
 
 #endif

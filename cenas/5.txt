@@ -13,7 +13,7 @@ A voz metalica muda por um instante.
 O sentinela ergue sua lamina e avanca.
 
 N: Sentinela de Ferro
-M: S
+M: N
 H: 9
 S: 8
 E: 16

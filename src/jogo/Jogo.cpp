@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
+#include <stdlib.h>
 #include "../../include/jogo/Jogo.h"
 #include "../../include/itens/CriarItem.h"
 
@@ -23,6 +24,10 @@ Jogo::~Jogo()
 // =====================================================================
 // Auxiliares de tela e teclado
 // =====================================================================
+
+void Jogo::limparTela(){
+    system("clear||cls");
+}
 
 void Jogo::separador()
 {
@@ -395,7 +400,7 @@ void Jogo::jogar()
         // Salva antes de marcar como visitada, para que ao carregar a cena
         // seja jogada de novo por completo (inclusive recebendo os itens).
         salvarJogo();
-
+        limparTela();
         int proxima;
         if (cena.getTipo() == 'm')
         {
@@ -430,6 +435,7 @@ void Jogo::jogar()
             return;
         }
         cenaAtual = proxima;
+       
     }
 }
 
@@ -447,6 +453,14 @@ int Jogo::cenaNarrativa(Cena &cena)
             cout << "Voce encontrou: ";
             item->mostrar();
             jogador->getInventario()->adicionarItem(item);
+        }
+
+        if(0 != cena.getProvisoes())        {
+            cout << "Voce recebeu ";
+            cout << cena.getProvisoes();
+            cout << " provisões!";
+
+            jogador->getInventario()->adicionarProvisoes(cena.getProvisoes());
         }
     }
 
