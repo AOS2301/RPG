@@ -24,13 +24,15 @@ Jogo::~Jogo()
 // Auxiliares de tela e teclado
 // =====================================================================
 
-void Jogo::limparTela(){
+void Jogo::limparTela()
+{
     system("clear||cls");
 }
 
 void Jogo::separador()
 {
-    cout << endl << "==================================================" << endl;
+    cout << endl
+         << "==================================================" << endl;
 }
 
 void Jogo::pausar()
@@ -50,7 +52,8 @@ int Jogo::lerOpcao(int minimo, int maximo)
         if (!getline(cin, linha))
         {
             // Entrada acabou (ex: Ctrl+D): encerra o programa
-            cout << endl << "Ate a proxima!" << endl;
+            cout << endl
+                 << "Ate a proxima!" << endl;
             exit(0);
         }
 
@@ -172,7 +175,8 @@ void Jogo::criarPersonagem()
         getline(cin, nome);
     }
 
-    cout << endl << "Como distribuir os 12 pontos?" << endl;
+    cout << endl
+         << "Como distribuir os 12 pontos?" << endl;
     cout << "  1 - Escolher os valores" << endl;
     cout << "  2 - Aleatorio" << endl;
     int modo = lerOpcao(1, 2);
@@ -284,10 +288,12 @@ void Jogo::telaInventario()
         cout << "  HABILIDADE: " << jogador->getHabilidade() << endl;
         cout << "  ENERGIA:    " << jogador->getEnergia() << " / " << jogador->getEnergiaMaxima() << endl;
         cout << "  SORTE:      " << jogador->getSorte() << endl;
-        cout << "  Pontos guardados: " << jogador->getPontosGuardados() << endl << endl;
+        cout << "  Pontos guardados: " << jogador->getPontosGuardados() << endl
+             << endl;
         inventario->mostrar();
 
-        cout << endl << "  1 - Equipar arma ou armadura" << endl;
+        cout << endl
+             << "  1 - Equipar arma ou armadura" << endl;
         cout << "  2 - Comer provisao (+4 de energia)" << endl;
         cout << "  3 - Usar pontos guardados" << endl;
         cout << "  0 - Voltar para a aventura" << endl;
@@ -350,7 +356,8 @@ void Jogo::usarPontosGuardados()
 
     while (jogador->getPontosGuardados() > 0)
     {
-        cout << endl << "Pontos guardados: " << jogador->getPontosGuardados() << endl;
+        cout << endl
+             << "Pontos guardados: " << jogador->getPontosGuardados() << endl;
         cout << "  1 - HABILIDADE (" << jogador->getHabilidade() << "/12)" << endl;
         cout << "  2 - ENERGIA    (" << jogador->getEnergiaMaxima() << "/24)" << endl;
         cout << "  3 - SORTE      (" << jogador->getSorte() << "/12)" << endl;
@@ -434,7 +441,6 @@ void Jogo::jogar()
             return;
         }
         cenaAtual = proxima;
-       
     }
 }
 
@@ -454,7 +460,8 @@ int Jogo::cenaNarrativa(Cena &cena)
             jogador->getInventario()->adicionarItem(item);
         }
 
-        if(0 != cena.getProvisoes())        {
+        if (0 != cena.getProvisoes())
+        {
             cout << "Voce recebeu ";
             cout << cena.getProvisoes();
             cout << " provisoes!";
@@ -471,7 +478,8 @@ int Jogo::cenaNarrativa(Cena &cena)
 
     while (true)
     {
-        cout << endl << "O que voce faz?" << endl;
+        cout << endl
+             << "O que voce faz?" << endl;
         for (int i = 0; i < cena.getQuantidadeOpcoes(); i++)
         {
             cout << "  " << i + 1 << " - " << cena.getTextoOpcao(i) << endl;
@@ -596,7 +604,8 @@ bool Jogo::batalha(Monstro *monstro)
         cout << "                   BATALHA" << endl;
         separador();
         cout << monstro->getNome() << "  -  ENERGIA: " << monstro->getEnergia() << endl;
-        cout << jogador->getNome() << "  -  ENERGIA: " << jogador->getEnergia() << endl << endl;
+        cout << jogador->getNome() << "  -  ENERGIA: " << jogador->getEnergia() << endl
+             << endl;
         cout << "  1 - Atacar" << endl;
         cout << "  2 - Atacar testando a sorte (sorte: " << jogador->getSorte() << ")" << endl;
         cout << "  3 - Usar item / magia" << endl;

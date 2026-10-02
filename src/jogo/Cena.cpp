@@ -100,8 +100,7 @@ bool Cena::carregar(int numero)
         {
             tesouro = stoi(linha.substr(2));
         }
-        else if ((tipo == 'm' && inicio == "P:") 
-                    ||(tipo == 'n' && inicio == "P:"))
+        else if ((tipo == 'm' && inicio == "P:") || (tipo == 'n' && inicio == "P:"))
         {
             provisoes = stoi(linha.substr(2));
         }
@@ -191,4 +190,3 @@ int Cena::getProvisoes()
 {
     return provisoes;
 }
-
