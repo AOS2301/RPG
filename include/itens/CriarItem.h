@@ -12,5 +12,6 @@ using namespace std;
 //   'w' -> Arma, 'r' -> Armadura, qualquer outro -> ItemComum
 // Quem recebe o ponteiro vira o dono do item.
 Item *criarItem(string linha);
+string tirarCampo(string &linha);
 
 #endif
