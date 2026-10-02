@@ -714,9 +714,17 @@ void Jogo::rodadaDeAtaque(Monstro *monstro, bool testarSorte)
         {
             dano = dano + 1;
         }
+
         if (dano < 1)
         {
-            dano = 1; // um golpe que acerta sempre fere, mesmo com armadura
+            if (sorteDeuCerto) {
+                dano = 0;
+                // Caso esteja com sorte não fere
+            } else { 
+                dano = 1;
+                // um golpe que acerta sempre fere, mesmo com armadura
+            }
+            
         }
         jogador->receberDano(dano);
         cout << monstro->getNome() << " acertou voce! Voce perde " << dano << " de energia." << endl;
